@@ -42,18 +42,26 @@ ist.
 | Plugin | Zweck | Anmerkung |
 |---|---|---|
 | **Elementor** (free) | Builder | Basis |
-| **Elementor Pro** | **Theme Builder**, Loop Grid, Formulare, Popup | Lizenzpflichtig, siehe unten |
 | **realnorth-custom** (dieses Repo) | CPTs, Importer, Wohnungssuche, eigene Widgets | wir |
 | **Hello Elementor** + Child | Theme | |
 
-**Zur Pro-Lizenz, weil sie den Zuschnitt bestimmt:** Kopf- und Fusszeile
-über alle Seiten, Archiv- und Detail-Templates für Wohnungen sowie die
-Formulare sind Pro-Funktionen. Ohne Pro müssten wir Header, Footer,
-Wohnungsarchiv und Formulare selbst bauen — machbar, aber dann ist
-Elementor nur noch für die Inhaltsseiten zuständig und ein guter Teil des
-Komfortgewinns ist weg. **Empfehlung: Pro lizenzieren** (eine Site-Lizenz,
-jährlich). Das ist eine kaufmännische Entscheidung, die vor dem Baubeginn
-fallen sollte.
+**Entscheid: ohne Pro.** Damit fallen Theme Builder, Loop Grid und
+Dynamic Tags weg. Was Pro geliefert hätte, baut das Plugin:
+
+| Fehlt ohne Pro | Ersatz im Plugin |
+|---|---|
+| Theme Builder: Kopf-/Fusszeile | Eigene Ausgabe über die Hooks von Hello Elementor |
+| Archiv- und Detailseite Wohnungen | Eigene Templates über `template_include` |
+| Loop Grid | Eigene Widgets, die Beiträge abfragen und rendern |
+| Dynamic Tags | Felder werden in unseren Widgets gelesen, nicht im Builder gebunden |
+| Form Builder | WPForms bleibt — liegt mit 78 Einträgen ohnehin schon da |
+
+Die Folge für die Arbeitsteilung: Elementor ist für **Inhaltsseiten**
+zuständig, das Plugin für alles Wiederkehrende und alles Dynamische.
+Layoutänderungen an Kopfzeile, Fusszeile oder Wohnungsliste sind damit
+Entwicklungsaufgaben, keine Klickarbeit. Das ist der bewusst in Kauf
+genommene Preis; er lässt sich jederzeit rückgängig machen, indem Pro
+nachgekauft und auf Theme-Builder-Templates umgestellt wird.
 
 ### Dazu
 
@@ -142,17 +150,16 @@ damit ist wenigstens die Designgrundlage versioniert.
 
 ## Reihenfolge
 
-1. Elementor-Pro-Lizenz klären.
-2. Auf einem Klon arbeiten (Plesk WordPress Toolkit), nicht live.
-3. Hello Elementor + Child, Kit mit Farben und Barlow einrichten.
-4. Plugin erweitern: CPTs, Felder, Dynamic Tags.
-5. Medienbibliothek füllen (Bilder und Teamfotos aus der Übergabe).
-6. Theme Builder: Kopfzeile, Fusszeile, Archiv und Detailseite Wohnungen.
-7. Seiten bauen, Texte aus `content/*.md`, Seite für Seite.
-8. Wohnungssuche als Widget, zuerst gegen die Beispieldaten.
-9. Importer, sobald die Datenquelle feststeht.
-10. Redirects der alten URLs, Impressum und Datenschutz, dann umschalten.
-11. Erst danach Pagelayer und PopularFX löschen.
+1. Auf einem Klon arbeiten (Plesk WordPress Toolkit), nicht live.
+2. Hello Elementor + Child, Kit mit Farben und Barlow einrichten.
+3. Plugin erweitern: CPTs, Felder, Dynamic Tags.
+4. Medienbibliothek füllen (Bilder und Teamfotos aus der Übergabe).
+5. Plugin: Kopfzeile, Fusszeile, Archiv und Detailseite Wohnungen.
+6. Seiten bauen, Texte aus `content/*.md`, Seite für Seite.
+7. Wohnungssuche als Widget, zuerst gegen die Beispieldaten.
+8. Importer, sobald die Datenquelle feststeht.
+9. Redirects der alten URLs, Impressum und Datenschutz, dann umschalten.
+10. Erst danach Pagelayer und PopularFX löschen.
 
 ## Was dabei riskant ist
 
@@ -162,7 +169,8 @@ damit ist wenigstens die Designgrundlage versioniert.
 * **Layouts sind nicht versioniert.** Ein Fehlgriff im Builder lässt sich
   nur über ein Datenbank-Backup zurückholen. Vor grösseren Umbauten ein
   Backup im Plesk Backup Manager anlegen.
-* **Pro-Abhängigkeit.** Läuft die Lizenz aus, funktionieren bestehende
-  Templates weiter, aber es gibt keine Updates mehr. Bei einem
-  Sicherheitsfix ist das ein Problem — die Lizenz gehört in den
-  Jahresbudget-Posten.
+* **Mehr Code statt Klickarbeit.** Ohne Pro liegt mehr in unserer Hand:
+  Kopfzeile, Fusszeile, Archiv und jede dynamische Liste. Das ist
+  versioniert und testbar — aber jede Layoutänderung daran braucht einen
+  Entwickler. Wenn das im Alltag stört, ist Pro der Ausweg, nicht ein
+  Umbau.
