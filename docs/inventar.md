@@ -40,12 +40,15 @@ und Vorbild:
 |---|---|---|
 | 14 Visualisierungen, 1.5–6 MB | `src/assets/` | Seite «Entwicklung», Teaser «Im Birkenhain» |
 | 3 PDFs (Planungsbericht, Situationsplan, Sondernutzungsvorschriften) | `public/dokumente/` | Downloads auf der Entwicklungsseite |
-| Projektzahlen (300 Wohnungen, 17 Baubereiche, Koordinaten) | `src/data/projekt.json` | Faktenblock Birkenhain |
+| Projektzahlen (300 Wohnungen im Gesamtprojekt, 17 Baubereiche, Koordinaten) | `src/data/projekt.json` | Faktenblock Birkenhain |
 | Anmelde-Endpoint mit Double-Opt-In | `public/api/` | Vorbild für das Suchabo |
 | Plesk-Deploy-Dokumentation | `docs/PLESK-*.md` | Vergleich mit unserem Deploy-Weg |
 
-Achtung: Der Entwurf nennt **278** Mietwohnungen, `projekt.json` nennt
-**300**. Eine der beiden Zahlen ist veraltet — vor der Publikation klären.
+Wichtig zu den Wohnungszahlen: **beide stimmen.** Die Überbauung «Im
+Birkenhain» umfasst **300** Wohnungen (so in `projekt.json` auf
+birkenhain.ch), davon gehören **278** der Real North AG. Auf realnorth.ch
+steht deshalb 278, auf birkenhain.ch 300 — das ist kein Widerspruch und
+darf nicht «vereinheitlicht» werden.
 
 ### 3. Dieses Repo (`spider-srog/realnorth`)
 
@@ -95,6 +98,5 @@ stehen deshalb nur die Referenzen; die Dateien selbst wurden separat
    sind dort Platzhalter.
 2. **Bewirtschaftungssoftware** und ihr Exportformat — bestimmt, ob die
    Wohnungsliste importiert oder von Hand gepflegt wird.
-3. **Entscheid 278 oder 300 Wohnungen** im Birkenhain.
-4. **Juristisches**: Impressum und Datenschutz für realnorth.ch.
-5. **Mieterlogin** — im Entwurf als Schalter angelegt, Umfang ungeklärt.
+3. **Juristisches**: Impressum und Datenschutz für realnorth.ch.
+4. **Mieterlogin** — im Entwurf als Schalter angelegt, Umfang ungeklärt.
