@@ -1,10 +1,162 @@
 /*
- * realnorth.ch — projektspezifisches CSS
+ * realnorth.ch — Gestaltungsgrundlage
  *
- * Wird vom Plugin realnorth-custom mit Priorität 20 geladen, also nach
- * Theme und Pagelayer. Damit reicht normale Spezifität, !important
- * sollte die Ausnahme bleiben.
+ * Marke und Typografie an einer Stelle. Alles Weitere (Kopfzeile,
+ * Wohnungsliste, eigene Widgets) greift auf diese Tokens zu, statt
+ * Farbwerte zu wiederholen.
  *
- * Cache-Busting läuft über filemtime() — nach dem Deploy ist die neue
- * Version sofort aktiv, ohne Versionsnummer von Hand zu pflegen.
+ * Die Hex-Werte stammen aus dem Design-Entwurf «Realnorth Website
+ * Redesign» und setzen das Markenfarbtrio Marineblau / Graubraun /
+ * Hellgrau um.
+ *
+ * Barlow liegt selbst gehostet in assets/fonts/. Bewusst nicht über das
+ * Google-CDN: eine Schriftanfrage pro Besucher an einen Dritten ist in
+ * der Schweiz datenschutzrechtlich heikel und kostet zusätzlich eine
+ * Verbindung.
  */
+
+/* ---------- Schrift ---------- */
+
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/barlow-400.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('../fonts/barlow-500.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/barlow-600.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('../fonts/barlow-700.woff2') format('woff2');
+}
+
+/* ---------- Tokens ---------- */
+
+:root {
+	/* Marke */
+	--rn-marineblau: #0e2841;
+	--rn-graubraun: #3c3a38;
+	--rn-hellgrau: #dad8d5;
+	--rn-linie: #c9c5c0;
+	--rn-flaeche: #f6f5f1;
+	--rn-blau-mittel: #52616a;
+	--rn-blau-tief: #153b54;
+	--rn-weiss: #ffffff;
+
+	/* Rollen — im Markup wird diese Ebene benutzt, nicht die Farbnamen.
+	   So lässt sich eine Farbe tauschen, ohne jede Regel anzufassen. */
+	--rn-text: var(--rn-graubraun);
+	--rn-text-leise: var(--rn-blau-mittel);
+	--rn-text-invers: var(--rn-weiss);
+	--rn-grund: var(--rn-weiss);
+	--rn-grund-ruhig: var(--rn-flaeche);
+	--rn-grund-dunkel: var(--rn-marineblau);
+	--rn-akzent: var(--rn-marineblau);
+
+	/* Typografie */
+	--rn-schrift: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--rn-zeile: 1.6;
+
+	/* Raster — eine Skala statt gestreuter Pixelwerte */
+	--rn-abstand-1: 4px;
+	--rn-abstand-2: 8px;
+	--rn-abstand-3: 16px;
+	--rn-abstand-4: 24px;
+	--rn-abstand-5: 40px;
+	--rn-abstand-6: 64px;
+	--rn-abstand-7: 96px;
+	--rn-breite: 1280px;
+	--rn-radius: 10px;
+}
+
+/* ---------- Bausteine ---------- */
+
+.rn-wrap {
+	max-width: var(--rn-breite);
+	margin-inline: auto;
+	padding-inline: var(--rn-abstand-4);
+}
+
+.rn-kicker {
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--rn-akzent);
+}
+
+.rn-titel {
+	font-weight: 600;
+	line-height: 1.05;
+	letter-spacing: -0.02em;
+	color: var(--rn-marineblau);
+	text-wrap: balance;
+}
+
+.rn-knopf {
+	display: inline-block;
+	padding: 14px 26px;
+	border-radius: var(--rn-radius);
+	background: var(--rn-marineblau);
+	color: var(--rn-text-invers);
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid var(--rn-marineblau);
+}
+
+.rn-knopf:hover {
+	background: var(--rn-blau-tief);
+	border-color: var(--rn-blau-tief);
+}
+
+.rn-knopf--leise {
+	background: transparent;
+	color: var(--rn-marineblau);
+	border-color: var(--rn-linie);
+}
+
+.rn-knopf--leise:hover {
+	background: var(--rn-flaeche);
+	border-color: var(--rn-marineblau);
+}
+
+/* Status einer Wohnung — die Farbe trägt Bedeutung, deshalb hier und
+   nicht pro Einsatzort. */
+.rn-pill {
+	display: inline-block;
+	padding: 5px 12px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.rn-pill--frei {
+	background: var(--rn-marineblau);
+	color: var(--rn-text-invers);
+}
+
+.rn-pill--reserviert,
+.rn-pill--vormerkung {
+	background: var(--rn-hellgrau);
+	color: var(--rn-graubraun);
+}
