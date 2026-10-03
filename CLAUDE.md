@@ -18,10 +18,17 @@ Die Seite wird neu gebaut: **WordPress mit Elementor**, nach dem Entwurf
 stehen in `docs/konzept-website.md`, das Material in `docs/inventar.md`,
 die Texte in `content/`.
 
-Für die Arbeitsteilung heisst das: **Layout baut Elementor** (und liegt
-damit in der Datenbank), **Logik baut dieses Plugin** — Datenmodell,
-Importer, Wohnungssuche, eigene Widgets. Je weniger im Builder steckt,
-desto mehr ist reviewbar und zurückrollbar.
+Für die Arbeitsteilung heisst das: **Texte liegen in der Datenbank**
+(Seiteninhalt, im Editor änderbar), **Bilder in der Mediathek**,
+**alles andere in diesem Plugin** — Gestaltung, Kopf- und Fusszeile,
+Seitenvorlage, die Bausteine als Shortcodes, Datenmodell und Importer.
+
+Ursprünglich war dafür Elementor vorgesehen. Ohne Pro kann es die
+nötigen Teile nicht liefern (kein Theme Builder, kein Loop Grid), und
+was im Builder steckt, liegt in der Datenbank und lässt sich weder
+reviewen noch zurückrollen. Deshalb baut das Plugin das Gerüst; der
+Builder bleibt für Einzelseiten verfügbar. Details:
+`docs/seitenaufbau.md`.
 
 Solange die neue Seite nicht steht, gilt für die laufende Seite weiterhin
 alles unten: Pagelayer-Inhalte in der Datenbank, Theme nicht anfassen.

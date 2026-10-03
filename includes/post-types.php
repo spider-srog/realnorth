@@ -93,7 +93,10 @@ function register_post_types(): void {
 				'not_found'     => __( 'Keine Wohnungen gefunden', 'realnorth' ),
 			),
 			'public'       => true,
-			'has_archive'  => 'wohnungen',
+			// Kein eigenes Archiv: die Liste steht auf der Seite
+			// /wohnungen/ und wird dort von [rn_wohnungen] gebaut. Ein
+			// Archiv unter demselben Namen würde die Seite verdecken.
+			'has_archive'  => false,
 			'rewrite'      => array( 'slug' => 'wohnung', 'with_front' => false ),
 			'menu_icon'    => 'dashicons-admin-home',
 			'menu_position' => 20,
