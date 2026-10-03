@@ -11,6 +11,21 @@ Hier liegen unsere Anpassungen — eigenes CSS, Hooks, Funktionen,
 Shortcodes. Nicht hier: WordPress-Core, das Theme, Fremd-Plugins,
 `wp-config.php`, Uploads, Datenbank.
 
+## Wohin das Projekt geht
+
+Die Seite wird neu gebaut: **WordPress mit Elementor**, nach dem Entwurf
+«Realnorth Website Redesign». Entscheid, Plugin-Auswahl und Reihenfolge
+stehen in `docs/konzept-website.md`, das Material in `docs/inventar.md`,
+die Texte in `content/`.
+
+Für die Arbeitsteilung heisst das: **Layout baut Elementor** (und liegt
+damit in der Datenbank), **Logik baut dieses Plugin** — Datenmodell,
+Importer, Wohnungssuche, eigene Widgets. Je weniger im Builder steckt,
+desto mehr ist reviewbar und zurückrollbar.
+
+Solange die neue Seite nicht steht, gilt für die laufende Seite weiterhin
+alles unten: Pagelayer-Inhalte in der Datenbank, Theme nicht anfassen.
+
 ## Die Seite in einem Absatz
 
 WordPress 7.1 auf Plesk (`rlx1.loginserver.ch`), PHP 8.5.9, nginx 1.30.4,

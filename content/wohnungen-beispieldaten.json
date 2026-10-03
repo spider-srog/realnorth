@@ -1,0 +1,92 @@
+[
+  {
+    "slug": "bergstrasse-b12",
+    "objekt": "Bergstrasse 12, B 12",
+    "ort": "Berikon",
+    "zimmer": "3.5",
+    "flaeche": 84,
+    "frei": "01.10.2026",
+    "miete": 1980,
+    "status": "Frei"
+  },
+  {
+    "slug": "bergstrasse-c04",
+    "objekt": "Bergstrasse 12, C 04",
+    "ort": "Berikon",
+    "zimmer": "4.5",
+    "flaeche": 106,
+    "frei": "01.11.2026",
+    "miete": 2350,
+    "status": "Frei"
+  },
+  {
+    "slug": "islerenweg-a21",
+    "objekt": "Islerenweg 4, A 21",
+    "ort": "Rudolfstetten",
+    "zimmer": "2.5",
+    "flaeche": 61,
+    "frei": "sofort",
+    "miete": 1540,
+    "status": "Frei"
+  },
+  {
+    "slug": "islerenweg-a08",
+    "objekt": "Islerenweg 4, A 08",
+    "ort": "Rudolfstetten",
+    "zimmer": "4.5",
+    "flaeche": 112,
+    "frei": "01.12.2026",
+    "miete": 2480,
+    "status": "Reserviert"
+  },
+  {
+    "slug": "seestrasse-3og",
+    "objekt": "Seestrasse 27, 3. OG",
+    "ort": "Zürich",
+    "zimmer": "2.5",
+    "flaeche": 58,
+    "frei": "01.10.2026",
+    "miete": 2290,
+    "status": "Frei"
+  },
+  {
+    "slug": "seestrasse-dach",
+    "objekt": "Seestrasse 27, Attika",
+    "ort": "Zürich",
+    "zimmer": "3.5",
+    "flaeche": 92,
+    "frei": "01.01.2027",
+    "miete": 3450,
+    "status": "Vormerkung"
+  },
+  {
+    "slug": "seenerstrasse-11",
+    "objekt": "Seenerstrasse 11, 1. OG",
+    "ort": "Winterthur",
+    "zimmer": "3.5",
+    "flaeche": 79,
+    "frei": "sofort",
+    "miete": 1720,
+    "status": "Frei"
+  },
+  {
+    "slug": "seenerstrasse-24",
+    "objekt": "Seenerstrasse 11, 2. OG",
+    "ort": "Winterthur",
+    "zimmer": "5.5",
+    "flaeche": 128,
+    "frei": "01.11.2026",
+    "miete": 2260,
+    "status": "Frei"
+  },
+  {
+    "slug": "tannhof-g03",
+    "objekt": "Tannhofweg 8, G 03",
+    "ort": "Berikon",
+    "zimmer": "2.5",
+    "flaeche": 64,
+    "frei": "01.10.2026",
+    "miete": 1610,
+    "status": "Frei"
+  }
+]

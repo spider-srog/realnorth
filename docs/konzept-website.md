@@ -1,183 +1,168 @@
-# Konzept: neue Website realnorth.ch
+# Konzept: neue Website realnorth.ch mit WordPress und Elementor
 
-Stand 2026-08-20. Ausgangslage: `ist-zustand.md`. Gestaltung: siehe
-Design-Canvas (drei Richtungen, Entscheid offen).
+Stand 2026-10-03. Ersetzt die erste Fassung, die ein Block-Theme vorsah.
+Der Auftrag lautet jetzt: **mit WordPress und Elementor publizieren.**
 
-Ziel laut Auftrag: aktuelle Bauprojekte, Immobilienbewirtschaftung, freie
-Wohnungen — moderner und dynamischer als propertyone.ch oder
-mozzattischlumpf.ch.
+Material und Herkunft: `inventar.md`. Ausgangslage der laufenden Seite:
+`ist-zustand.md`. Texte: `../content/`.
 
-## Der entscheidende Punkt zuerst: woher kommen die Wohnungen
+## Was die Entscheidung für Elementor bedeutet
 
-Der Auftrag sagt «freie Wohnungen direkt von Comparis». Das geht so nicht,
-und zwar nicht wegen uns:
+Elementor ist ein Page-Builder wie das heutige Pagelayer. Die Layouts
+liegen damit weiterhin **in der Datenbank**, nicht im Repo. Das ist eine
+bewusste Entscheidung zugunsten von Bedienbarkeit — wer Inhalte pflegt,
+soll das ohne Entwickler können — und sie prägt die Rollenverteilung:
 
-**Comparis ist Empfänger, nicht Sender.** Bewirtschaftungssoftware (z. B.
-Immomig, CASASOFT und andere) schickt Inserate per Schnittstelle *an*
-Comparis — kostenlos, ohne Mengenbegrenzung, Freischaltung über
-`immobilien@comparis.ch`. Eine öffentliche Comparis-API, um die eigenen
-Inserate wieder *herauszuholen*, gibt es nicht. Scraping wäre die einzige
-technische Alternative und ist es nicht wert: es bricht bei jedem
-Redesign, verstösst absehbar gegen die Nutzungsbedingungen und liefert
-schlechtere Daten als die Quelle.
-
-**Richtige Architektur:** die Website zieht aus derselben Quelle, die
-Comparis füttert.
-
-    Bewirtschaftungssoftware  ──┬──►  Comparis, Homegate, ImmoScout
-       (Datenhoheit)            └──►  realnorth.ch  (unser Importer)
-
-Damit ist die Website gleichwertig zu den Portalen statt von ihnen
-abhängig, und die Daten sind eher aktueller als dort.
-
-**Was ich dafür brauche:** welche Bewirtschaftungssoftware im Einsatz ist
-und welchen Export sie kann. Erfahrungsgemäss gibt es eines davon:
-IDX/immoXML, ein JSON- oder CSV-Feed, oder eine REST-API mit Token.
-
-Der Importer wird deshalb **quellen-agnostisch** gebaut: ein Adapter pro
-Format, dahinter ein einheitliches Datenmodell. Fällt die Entscheidung
-später anders aus, wird ein Adapter getauscht, nicht die Website.
-Zwischenlösung, falls es keinen Export gibt: Wohnungen direkt in
-WordPress pflegen — das gleiche Datenmodell, nur von Hand gefüllt.
-
-## Technische Grundsatzentscheidung: Block-Theme statt Page-Builder
-
-Heute: PopularFX + Pagelayer. Das bleibt nicht, aus drei Gründen.
-
-1. **Layouts liegen in der Datenbank.** Nichts davon ist versionierbar,
-   reviewbar oder rollbackfähig. Genau das haben wir gerade eingerichtet.
-2. **Der Rückstand ist strukturell.** Pagelayer 1.8.8 gegen 2.1.8, Pro
-   ohne Lizenz — ein Update-Sprung, der Layouts bricht, steht ohnehin an.
-   Wenn schon Bruch, dann in Richtung Zukunft.
-3. **Dynamik braucht Code, nicht Klickstrecken.** Live-Filter,
-   Feed-Import, Baufortschritt, Suchabos — das schreibt man, statt es zu
-   konfigurieren.
-
-Also: **eigenes Block-Theme** (Full Site Editing), im Repo, plus eigene
-Blocks für die dynamischen Teile. Redaktionell bleibt der Block-Editor
-für Inhalte zuständig — Struktur und Verhalten kommen aus Git.
-
-## Plugin-Entscheid
-
-### Bleibt
-
-| Plugin | Warum |
-|---|---|
-| **WPForms** | 78 Bestandseinträge und 2 Formulare. Ein Wechsel kostet Migration ohne Gegenwert. Aber: auf aktuelle Version bringen (Lizenzfrage klären). |
-
-### Kommt
-
-| Plugin | Zweck | Warum dieses |
+| Ort | Verantwortlich für | Versioniert? |
 |---|---|---|
-| **realnorth-custom** (eigenes, dieses Repo) | Datenmodell, Feed-Importer, Suche-Endpoint, Blocks | Kernlogik gehört uns, nicht einem Anbieter |
-| **realnorth Theme** (eigenes Block-Theme) | Gestaltung, Templates | Volle Kontrolle, alles in Git |
-| **Rank Math SEO** | Meta, Sitemaps, Schema.org | Schlanker als Yoast in der Gratis-Version, und liefert `RealEstateListing`-Schema — wichtig, damit Wohnungen in der Google-Suche als Objekte erscheinen |
-| **Safe SVG** | Logo/Icons als SVG | WordPress erlaubt SVG-Upload sonst nicht, und ungefiltert wäre es ein XSS-Loch |
+| **Elementor** | Layout, Abstände, Sektionen, Seitenaufbau | nein, Datenbank |
+| **Plugin `realnorth-custom`** (dieses Repo) | Datenmodell, Importer, Suchlogik, eigene Widgets, Textkorrekturen | ja, Git |
+| **Theme** | nur Grundgerüst | — |
+| **Elementor-Kit** | Farben, Schriften, Grundtypografie | Export als JSON ins Repo |
 
-Bewusst **nicht** eingesetzt:
+Daraus folgt die wichtigste Arbeitsregel: **Alles, was Logik ist, gehört
+ins Plugin.** Was im Builder liegt, ist nicht reviewbar, nicht testbar und
+nicht zurückrollbar. Je weniger dort steckt, desto besser.
 
-* **Kein Filter-Plugin** (FacetWP o. ä.). Die Wohnungssuche ist ein
-  eigener REST-Endpoint plus rund 100 Zeilen JavaScript. Das ist schneller
-  als ein generisches Plugin, kostet keine Lizenz und lässt sich genau so
-  gestalten, wie es der Canvas zeigt.
-* **Kein Immobilien-Plugin** (WP Residence, Estatik o. ä.). Die bringen
-  ein eigenes Datenmodell, eigene Templates und eigene Update-Zyklen mit —
-  wir brauchen nur einen Bruchteil davon und würden gegen das Plugin
-  arbeiten statt mit ihm.
-* **Kein Cache-Plugin vorerst.** Plesk kann nginx-Caching, und ohne
-  Opcache und mit einem schlanken Theme ist das Budget vorhanden. Erst
-  messen, dann optimieren.
-* **Kein Page-Builder.**
+## Theme
 
-### Geht
+**Hello Elementor** als Basis, dazu ein Child-Theme für die wenigen
+Dinge, die Elementor nicht abdeckt (Schrift-Einbindung, einzelne
+Template-Overrides). Hello ist bewusst minimal — kein eigenes Design, das
+gegen Elementor arbeitet.
 
-PopularFX (Theme), PageLayer, Pagelayer Pro, PopularFX Website Templates,
-UltraEmbed, Hello Dolly, WPForms Lite. Akismet nur behalten, wenn
-Kommentare offen bleiben — sonst weg.
+PopularFX fliegt raus. Damit gehen die Customizer-Einstellungen verloren;
+das ist beim Neubau gewollt und kein Verlust, weil das Design ohnehin neu
+ist.
 
-**Reihenfolge beachten:** Pagelayer erst deaktivieren, wenn alle Inhalte
-migriert sind. Pagelayer-Inhalte sind in einem eigenen Format in der
-Datenbank; nach der Deaktivierung sind sie im Editor nicht mehr lesbar.
-Die Migration ist Handarbeit, Seite für Seite — das ist der grösste
-Einzelposten im Projekt und kein Skript.
+## Plugins
+
+### Pflicht
+
+| Plugin | Zweck | Anmerkung |
+|---|---|---|
+| **Elementor** (free) | Builder | Basis |
+| **Elementor Pro** | **Theme Builder**, Loop Grid, Formulare, Popup | Lizenzpflichtig, siehe unten |
+| **realnorth-custom** (dieses Repo) | CPTs, Importer, Wohnungssuche, eigene Widgets | wir |
+| **Hello Elementor** + Child | Theme | |
+
+**Zur Pro-Lizenz, weil sie den Zuschnitt bestimmt:** Kopf- und Fusszeile
+über alle Seiten, Archiv- und Detail-Templates für Wohnungen sowie die
+Formulare sind Pro-Funktionen. Ohne Pro müssten wir Header, Footer,
+Wohnungsarchiv und Formulare selbst bauen — machbar, aber dann ist
+Elementor nur noch für die Inhaltsseiten zuständig und ein guter Teil des
+Komfortgewinns ist weg. **Empfehlung: Pro lizenzieren** (eine Site-Lizenz,
+jährlich). Das ist eine kaufmännische Entscheidung, die vor dem Baubeginn
+fallen sollte.
+
+### Dazu
+
+| Plugin | Zweck |
+|---|---|
+| **Rank Math SEO** | Meta, Sitemap, `RealEstateListing`-Schema für die Wohnungen |
+| **Safe SVG** | Logo und Eisbär als SVG hochladen können |
+
+### Bewusst nicht
+
+* **Kein Immobilien-Plugin** (WP Residence, Estatik). Sie bringen ein
+  eigenes Datenmodell und eigene Templates mit, von denen wir einen
+  Bruchteil brauchen — und arbeiten dann gegen uns.
+* **Kein Filter-Plugin.** Die Wohnungssuche wird ein eigenes
+  Elementor-Widget mit REST-Endpoint. Der Entwurf zeigt genau, wie sie
+  aussehen und sich verhalten soll; ein generisches Plugin kann das nicht.
+* **Kein Cache-Plugin vor der ersten Messung.** Elementor ist schwer genug;
+  erst messen, dann gezielt optimieren.
+
+### Raus
+
+PopularFX, PageLayer, Pagelayer Pro, PopularFX Website Templates,
+UltraEmbed, Hello Dolly. WPForms bleibt vorerst wegen der 78 Einträge —
+wenn Elementor Pro kommt, wandern neue Formulare dorthin und WPForms wird
+später abgelöst.
 
 ## Datenmodell
 
-    bauprojekt (CPT)
-      Titel, Beschrieb, Galerie
-      Felder: Ort, Status (Baueingabe|Bau|Ausbau|fertig),
-              Baufortschritt %, Anzahl Wohnungen, Bezugstermin,
-              Bauherr, Architektur, Verkaufs-/Vermietungsstart
-      Taxonomie: Nutzung (Wohnen|Gewerbe|gemischt), Gemeinde
+Unverändert gegenüber der ersten Fassung, jetzt mit Elementor-Anbindung:
 
-    wohnung (CPT, überwiegend importiert)
-      Felder: Objekt-ID (Quelle), Zimmer, Fläche, Etage, Miete brutto/netto,
-              Nebenkosten, verfügbar ab, Adresse, Geo, Bilder, Dokumente,
-              Status (frei|reserviert|vermietet)
-      Relation: gehört zu liegenschaft / bauprojekt
+    wohnung (CPT)         Objekt, Ort, Zimmer, Fläche, Etage, Miete,
+                          verfügbar ab, Status (Frei|Reserviert|Vormerkung),
+                          Bilder, Dokumente, Relation zu liegenschaft
+    liegenschaft (CPT)    Adresse, Baujahr, Einheiten, Hauswart
+    bauprojekt (CPT)      Ort, Status, Etappen, Bezugstermin, Visualisierungen
+    team (CPT)            Name, Rolle, Bereich, Foto, Reihenfolge
 
-    liegenschaft (CPT, intern)
-      Adresse, Eigentümer-Referenz, Einheiten — Grundlage für Reporting
-      und für die Zuordnung der Wohnungen
+Die Felder werden als Meta registriert und für Elementors **Dynamic Tags**
+freigegeben — dann können Templates direkt darauf zugreifen, ohne dass
+jemand Werte abtippt. Das Statusfeld und die Preisanzeige folgen dem
+Schalter `showPrices` aus dem Entwurf.
 
-Importierte Felder sind schreibgeschützt im Backend (sonst überschreibt
-der nächste Feed-Lauf die Handarbeit). Redaktionell ergänzbar bleiben
-Texte und Bilder pro Objekt.
+`content/wohnungen-beispieldaten.json` und `content/team.json` sind die
+Startbefüllung: 9 Wohnungen in Berikon, Rudolfstetten, Zürich und
+Winterthur, 7 Personen.
+
+## Eigene Elementor-Widgets
+
+Im Plugin, nicht im Builder:
+
+1. **Wohnungssuche** — Filter nach Ort, Zimmern, Miete und Verfügbarkeit,
+   Ergebnisliste ohne Seitenneuladen, Leerzustand mit Suchabo. Genau das,
+   was der Entwurf auf der Seite «Freie Wohnungen» zeigt.
+2. **Wohnungs-Teaser** — die drei aktuellsten Objekte für die Startseite.
+3. **Team-Raster** — aus dem Team-CPT, sortiert nach Bereich.
+4. **Projekt-Faktenblock** — Zahlen zu Birkenhain aus einer Datenquelle
+   statt abgetippt.
 
 ## Importer
 
-* Adapter pro Quellformat, gemeinsames internes Schema.
-* Lauf per WP-Cron, stündlich, plus Button «jetzt importieren».
-* Idempotent über die Objekt-ID der Quelle: bestehende Objekte werden
-  aktualisiert, verschwundene auf `vermietet` gesetzt statt gelöscht
-  (Permalinks und Statistik bleiben erhalten).
-* Jeder Lauf schreibt ein Protokoll: gelesen, neu, geändert, Fehler.
-* Bilder werden einmal in die Mediathek übernommen, nicht bei jedem Lauf.
+Wie gehabt quellen-agnostisch: ein Adapter je Exportformat der
+Bewirtschaftungssoftware, dahinter das `wohnung`-CPT. Lauf per WP-Cron,
+idempotent über die Objekt-ID der Quelle, verschwundene Objekte werden auf
+`vermietet` gesetzt statt gelöscht.
 
-**Zu prüfen:** WP-Cron läuft nur, wenn die Seite Besucher hat. Ob das
-Plesk-Abo ohne Shell «Geplante Aufgaben» erlaubt, ist offen — wenn ja,
-echter Cron-Aufruf auf `wp-cron.php`; wenn nein, reicht WP-Cron bei
-stündlichem Ziel in der Praxis aus.
+**Comparis bleibt Empfänger, nicht Sender** — die Inserate gehen von der
+Bewirtschaftungssoftware dorthin; eine API zum Zurücklesen gibt es nicht.
+Die Website zieht deshalb aus derselben Quelle, die Comparis füttert.
 
-## Deploy-Struktur
+## Elementor-Kit
 
-Ein Plesk-Git-Repository deployt in genau ein Verzeichnis. Wir brauchen
-zwei:
+Die Marke gehört einmal zentral hinterlegt, nicht in jede Sektion:
 
-| Repo | Server-Pfad |
+| Token | Wert |
 |---|---|
-| `spifroca/realnorth` (dieses) | `…/wp-content/plugins/realnorth-custom` |
-| `spifroca/realnorth-theme` (neu) | `…/wp-content/themes/realnorth` |
+| Primär | `#0e2841` Marineblau |
+| Text | `#3c3a38` Graubraun |
+| Akzent hell | `#dad8d5` |
+| Linien | `#c9c5c0` |
+| Fläche hell | `#f6f5f1` |
+| Sekundär | `#52616a`, `#153b54` |
+| Schrift | Barlow, selbst gehostet (nicht über Google-CDN) |
 
-Beide als *Remote repository* mit demselben Muster (`plesk-deploy.md`).
-Die Trennung ist nicht Bürokratie: das Datenmodell muss ein Redesign
-überleben, das Theme darf ersetzbar bleiben.
+Das Kit wird nach der Einrichtung als JSON exportiert und hier abgelegt —
+damit ist wenigstens die Designgrundlage versioniert.
 
 ## Reihenfolge
 
-1. Gestaltungsrichtung entscheiden (Canvas), Marke und Inhalte klären.
-2. Datenquelle für Wohnungen klären — das bestimmt den Importer.
-3. Block-Theme aufsetzen, Startseite in der gewählten Richtung.
-4. Datenmodell und Importer, zuerst gegen Beispieldaten.
-5. Wohnungssuche und Objekt-Dossier.
-6. Bauprojekte und Bewirtschaftung.
-7. Inhalte aus Pagelayer migrieren, Seite für Seite.
-8. Umschalten: Theme aktivieren, alte Plugins abschalten, Redirects
-   prüfen, Sitemap neu einreichen.
-9. Erst danach die alten Plugins löschen.
+1. Elementor-Pro-Lizenz klären.
+2. Auf einem Klon arbeiten (Plesk WordPress Toolkit), nicht live.
+3. Hello Elementor + Child, Kit mit Farben und Barlow einrichten.
+4. Plugin erweitern: CPTs, Felder, Dynamic Tags.
+5. Medienbibliothek füllen (Bilder und Teamfotos aus der Übergabe).
+6. Theme Builder: Kopfzeile, Fusszeile, Archiv und Detailseite Wohnungen.
+7. Seiten bauen, Texte aus `content/*.md`, Seite für Seite.
+8. Wohnungssuche als Widget, zuerst gegen die Beispieldaten.
+9. Importer, sobald die Datenquelle feststeht.
+10. Redirects der alten URLs, Impressum und Datenschutz, dann umschalten.
+11. Erst danach Pagelayer und PopularFX löschen.
 
-Auf einem Klon aus dem Plesk WordPress Toolkit entwickeln, nicht live.
+## Was dabei riskant ist
 
-## Offene Fragen
-
-1. **Bewirtschaftungssoftware** und ihr Exportformat.
-2. **Marke**: Logo, Farben, Schrift — gibt es etwas, oder wird es neu
-   entwickelt? Der Canvas zeigt drei Vorschläge ins Blaue.
-3. **Inhalte**: Projektnamen, Zahlen, Referenzen, Team, Adresse. Alles in
-   `[Klammern]` im Canvas ist eine offene Stelle.
-4. **Sprachen**: nur Deutsch, oder auch FR/EN? Beeinflusst das Theme von
-   Anfang an.
-5. **Eigentümer-Login** (Reporting, Dokumente) — Teil des Projekts oder
-   später?
-6. **Comparis**: soll die neue Seite auch *an* Comparis liefern, oder
-   bleibt das Aufgabe der Bewirtschaftungssoftware?
+* **Elementor ist schwer.** Mehr DOM, mehr CSS, mehr JavaScript als ein
+  Block-Theme. Gegenmittel: wenige Sektionen, keine verschachtelten
+  Container-Orgien, Bilder in moderner Grösse, am Ende messen.
+* **Layouts sind nicht versioniert.** Ein Fehlgriff im Builder lässt sich
+  nur über ein Datenbank-Backup zurückholen. Vor grösseren Umbauten ein
+  Backup im Plesk Backup Manager anlegen.
+* **Pro-Abhängigkeit.** Läuft die Lizenz aus, funktionieren bestehende
+  Templates weiter, aber es gibt keine Updates mehr. Bei einem
+  Sicherheitsfix ist das ein Problem — die Lizenz gehört in den
+  Jahresbudget-Posten.

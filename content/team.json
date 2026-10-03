@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Stephan Rogger",
+    "nachname": "Rogger",
+    "rolle": "Geschäftsführer, Geschäftsleitung",
+    "bereich": "Geschäftsleitung",
+    "ord": 1,
+    "photo": "team/stephan-rogger.webp",
+    "slot": "rn-team-1"
+  },
+  {
+    "name": "Noëmi Gabriel",
+    "nachname": "Gabriel",
+    "rolle": "Bewirtschafterin",
+    "bereich": "Bewirtschaftung",
+    "ord": 2,
+    "photo": "team/no-mi-gabriel.webp",
+    "slot": "rn-team-2"
+  },
+  {
+    "name": "Moritz Hahn",
+    "nachname": "Hahn",
+    "rolle": "Architekt ETH, Entwicklung",
+    "bereich": "Entwicklung",
+    "ord": 3,
+    "photo": "team/moritz-hahn.webp",
+    "slot": "rn-team-3"
+  },
+  {
+    "name": "Christian Peterhans",
+    "nachname": "Peterhans",
+    "rolle": "Projektleiter, Entwicklung",
+    "bereich": "Entwicklung",
+    "ord": 4,
+    "photo": "team/christian-peterhans.jpeg",
+    "slot": "rn-team-4"
+  },
+  {
+    "name": "Delia Schnüeriger",
+    "nachname": "Schnüeriger",
+    "rolle": "Projektleiterin jun., Entwicklung",
+    "bereich": "Entwicklung",
+    "ord": 5,
+    "photo": "team/delia-schn-eriger.webp",
+    "slot": "rn-team-5"
+  },
+  {
+    "name": "Beat Räber",
+    "nachname": "Räber",
+    "rolle": "Hauswart, Leitung",
+    "bereich": "Hauswartung",
+    "ord": 6,
+    "photo": "team/beat-r-ber.webp",
+    "slot": "rn-team-6"
+  },
+  {
+    "name": "Melanie Voser",
+    "nachname": "Voser",
+    "rolle": "Hauswartin",
+    "bereich": "Hauswartung",
+    "ord": 7,
+    "photo": "team/melanie-voser.webp",
+    "slot": "rn-team-7"
+  }
+]

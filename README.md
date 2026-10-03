@@ -15,7 +15,10 @@ Nicht im Repo: WordPress-Core, das PopularFX-Theme, Fremd-Plugins,
 
 | Dokument | Inhalt |
 |---|---|
-| [`docs/ist-zustand.md`](docs/ist-zustand.md) | Stack, Pfade, Theme, Plugins, offene Risiken — und warum unser Code ein Plugin ist und kein Child-Theme. |
+| [`docs/inventar.md`](docs/inventar.md) | **Hier anfangen beim Neubau.** Woher das Material kommt: Design-Entwurf, Birkenhain-Repo, laufende Seite, Marke — und was noch fehlt. |
+| [`docs/konzept-website.md`](docs/konzept-website.md) | Die neue Seite mit WordPress und Elementor: Rollenverteilung, Plugin-Entscheid, Datenmodell, eigene Widgets, Reihenfolge. |
+| [`content/`](content/) | Die Texte der neuen Seite, eine Datei pro Seite, plus Wohnungs- und Teamdaten als JSON. |
+| [`docs/ist-zustand.md`](docs/ist-zustand.md) | Stack, Pfade, Theme, Plugins der **laufenden** Seite und die offenen Risiken. |
 | [`docs/plesk-deploy.md`](docs/plesk-deploy.md) | Deployment GitHub -> Plesk: Feldwerte für den Plesk-Dialog, Webhook, Rollback. |
 | [`docs/automatischer-deploy.md`](docs/automatischer-deploy.md) | Die automatische Kette Push -> Prüfung -> `main` -> live, die drei Schalter dafür und die Notausschalter. |
 | [`docs/ist-zustand-erfassen.md`](docs/ist-zustand-erfassen.md) | Wie man den Ist-Zustand neu erhebt. |
