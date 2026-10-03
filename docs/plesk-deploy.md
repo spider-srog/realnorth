@@ -189,24 +189,40 @@ Manager. Danach die Ursache im Repo suchen.
 
 ## Bekannte Stolpersteine
 
-* **`fatal: Invalid path '…': No such file or directory`** beim Deploy —
-  zwei Ursachen, beide im Feld *Server path*:
+* **Die beiden Fehler beim Einrichten — und was wirklich geholfen hat.**
+  Das Anlegen des Repositories hat drei Anläufe gebraucht; hier die
+  Reihenfolge, in der die Fehler kamen, und der Fix:
 
-      fatal: Invalid path '/var/www/vhosts/realnorth.ch/realnorth':
-      No such file or directory
+  1. `fatal: Invalid path '/var/www/vhosts/realnorth.ch/realnorth': No such
+     file or directory`
+     Das Feld *Deployment directory* ist **relativ zum Abo-Root**, nicht zu
+     `httpdocs`. Und Plesk schlägt dort den **WordPress-Root** vor — der ist
+     falsch, es muss der Plugin-Ordner sein:
 
-  1. **Das Feld ist relativ zum Abo-Root**, nicht zu `httpdocs`. Steht dort
-     `realnorth`, landet der Checkout in
-     `/var/www/vhosts/realnorth.ch/realnorth` statt im Plugin-Ordner.
-     Richtig ist der volle Pfad ab Abo-Root, siehe Schritt 3.
-  2. **Plesk legt das Zielverzeichnis nicht an.** Es muss vor dem ersten
-     Deploy im File Manager existieren:
-     `httpdocs/realnorth/wordpress/wp-content/plugins/realnorth-custom`.
-     Ein leerer Ordner dort ist harmlos — WordPress ignoriert ihn, solange
-     keine Plugin-Datei drin liegt.
+         /httpdocs/realnorth/wordpress/wp-content/plugins/realnorth-custom
 
-  Meldet Plesk dagegen «Validierung des Bereitstellungsschlüssels: Fertig»,
-  ist die Verbindung zu GitHub in Ordnung; dann liegt es nur am Pfad.
+     Zur Kontrolle im File Manager: die Brotkrumen müssen
+     `httpdocs › realnorth › wordpress › wp-content › plugins ›
+     realnorth-custom` lauten. Fehlen `wordpress` oder `wp-content`, ist man
+     in der **Joomla-Installation**, die im selben Verzeichnis liegt — die
+     hat ebenfalls einen Ordner `plugins`, und WordPress schaut dort nie hin.
+
+  2. `fatal: this operation must be run in a work tree`
+     Der Fehler blieb, **auch nachdem der Pfad stimmte**. Ursache ist der
+     halbfertige Zustand aus dem ersten Versuch: Plesk baut sein lokales
+     Repository nur beim *Anlegen* auf, ein nachträglich korrigierter Pfad
+     repariert das nicht. Den Eintrag zu löschen und unter demselben Namen
+     neu anzulegen reicht ebenfalls nicht — Plesk greift wieder auf den
+     vorhandenen Ordner unter `~/git/` zu.
+
+     **Was geholfen hat: neu anlegen unter einem anderen Repository-Namen**
+     (`realnorth-plugin.git` statt `realnorth.git`), mit dem richtigen
+     Deployment-Verzeichnis gleich im Anlege-Dialog und Deployment mode auf
+     *Manual*.
+
+  Merksatz für das nächste Mal: Im Anlege-Dialog muss alles auf Anhieb
+  stimmen. Nachbessern geht bei diesem Dialog nicht — nur neu anlegen,
+  und dann unter neuem Namen.
 * **Weisser Screen nach Deploy** — fast immer ein PHP-Syntaxfehler. Genau
   dagegen ist `bin/php-lint.sh` da; ohne Shell gibt es auf dem Server kein
   `php -l` als Rettung. Achtung: unser Lint läuft auf PHP 8.4, der Server
