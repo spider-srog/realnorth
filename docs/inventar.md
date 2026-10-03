@@ -18,7 +18,7 @@ es enthält den kompletten Seitenaufbau mit fertigen Texten.
 | Palette | `#0e2841` Marineblau, `#3c3a38` Graubraun, `#dad8d5`/`#c9c5c0` Hellgrau, `#52616a`, `#153b54`, `#f6f5f1` |
 | Typografie | Barlow, als woff/woff2 eingebettet (4 Schnitte) |
 | Schalter im Entwurf | `heroMark` (Bär/Foto/Ohne), `showPrices`, `tenantLogin` |
-| Bilder | 7: Wortmarke weiss, Eisbär weiss (2 Varianten), 4 Birkenhain-Visualisierungen |
+| Bilder | **39**: 7 im Asset-Manifest (Wortmarke, Eisbär in zwei Farben, 4 Birkenhain-Visualisierungen) und **32 als `data:`-URI direkt im Markup** — die Rennweg-Aufnahmen. Letztere übersieht man leicht; sie machen 14.7 der 28 MB des Bundles aus. |
 | Daten | 9 Wohnungen, 7 Teammitglieder mit Foto |
 
 Daraus extrahiert und in dieses Repo übernommen:
@@ -77,14 +77,20 @@ seine Hex-Werte sind die verbindliche Umsetzung.
 | Startseite | `content/startseite.md` | Eisbär, Birkenhain-Aerial | Wohnungszähler |
 | Freie Wohnungen | `content/wohnungen.md` | — | `wohnungen-beispieldaten.json` |
 | Liegenschaften | `content/liegenschaften.md` | — | Tab-Umschaltung, kein eigener Inhalt |
-| Mietbestand | `content/mietbestand.md` | Bestandsfotos **fehlen** | — |
-| Rennweg | `content/rennweg.md` | Objektfotos **fehlen** | — |
+| Mietbestand | `content/mietbestand.md` | **fehlen** — der Entwurf hat hier null Bilder | — |
+| Rennweg | `content/rennweg.md` | 32 Stück, im Entwurf eingebettet, extrahiert und übergeben | — |
 | Entwicklung | `content/entwicklung.md` | Birkenhain-Visualisierungen, PDFs | `projekt.json` aus Quelle 2 |
 | Über uns | `content/ueber-uns.md` | 7 Teamfotos | `team.json` |
 | Service | `content/service.md` | — | — |
 | Kontakt | `content/kontakt.md` | — | Adresse, Telefon |
 
 ## Was bewusst nicht in diesem Repo liegt
+
+**Im Git-Repo liegen keine Bilder, und es lagen nie welche darin.** Geprüft
+über die gesamte Historie aller Branches: 13 Commits, 39 je getrackte
+Dateien, keine einzige Bild- oder PDF-Datei; der grösste Blob misst 16.9 KB.
+Wer Bildmaterial sucht, findet es im Design-Bundle und im Repo
+`spider-srog/birkenhain`, nicht hier.
 
 **Die Bilddateien.** Dieses Repo wird in den Plugin-Ordner der Live-Seite
 deployt; jedes Byte darin landet auf dem Server, bei jedem Deploy. Bilder
@@ -94,8 +100,8 @@ stehen deshalb nur die Referenzen; die Dateien selbst wurden separat
 
 ## Was fehlt
 
-1. **Fotos des Mietbestands** und des Objekts Rennweg 14/16 — im Entwurf
-   sind dort Platzhalter.
+1. **Fotos des Mietbestands** — als einzige Seite hat sie im Entwurf keine
+   Bilder. Rennweg 14/16 ist dagegen vollständig bebildert (32 Aufnahmen).
 2. **Bewirtschaftungssoftware** und ihr Exportformat — bestimmt, ob die
    Wohnungsliste importiert oder von Hand gepflegt wird.
 3. **Juristisches**: Impressum und Datenschutz für realnorth.ch.
