@@ -18,16 +18,24 @@ Die Seite wird neu gebaut: **WordPress mit Elementor**, nach dem Entwurf
 stehen in `docs/konzept-website.md`, das Material in `docs/inventar.md`,
 die Texte in `content/`.
 
-Für die Arbeitsteilung heisst das: **Texte liegen in der Datenbank**
-(Seiteninhalt, im Editor änderbar), **Bilder in der Mediathek**,
-**alles andere in diesem Plugin** — Gestaltung, Kopf- und Fusszeile,
-Seitenvorlage, die Bausteine als Shortcodes, Datenmodell und Importer.
+Gebaut wird mit **Elementor Pro**. Die Arbeitsteilung:
 
-Ursprünglich war dafür Elementor vorgesehen. Ohne Pro kann es die
-nötigen Teile nicht liefern (kein Theme Builder, kein Loop Grid), und
-was im Builder steckt, liegt in der Datenbank und lässt sich weder
-reviewen noch zurückrollen. Deshalb baut das Plugin das Gerüst; der
-Builder bleibt für Einzelseiten verfügbar. Details:
+* **Builder**: Kopf und Fuss (Theme Builder), Formulare (Elementor
+  Forms), die Anordnung der Seiten. Texte und Bilder sowieso.
+* **Plugin**: Gestaltung und Tokens, Seitenvorlage, Datenmodell,
+  Wohnungsliste samt Filter und Sortierung, Importer — und die
+  Bausteine, die im Builder als eigene Widget-Gruppe «realnorth»
+  erscheinen.
+
+Die Trennlinie ist nicht Geschmack, sondern Prüfbarkeit: was im Builder
+steckt, liegt in der Datenbank und ist weder reviewbar noch per Rollback
+zurückholbar noch testbar. Also gehört Fachlogik hierher («4.5+ Zimmer»,
+«sofort zuerst sortieren»), Anordnung in den Builder.
+
+Beim Rendern gilt Elementor zuerst: `elementor_theme_do_location()`
+entscheidet über Kopf und Fuss, und nur wenn dort nichts hinterlegt ist,
+springt die Fassung aus dem Plugin ein. Es gibt also keinen Stichtag, an
+dem alles gleichzeitig umgestellt sein muss. Details:
 `docs/seitenaufbau.md`.
 
 Solange die neue Seite nicht steht, gilt für die laufende Seite weiterhin

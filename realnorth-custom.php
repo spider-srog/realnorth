@@ -3,7 +3,7 @@
  * Plugin Name:       realnorth Custom
  * Plugin URI:        https://github.com/spifroca/realnorth
  * Description:       Projektspezifische Anpassungen für realnorth.ch — eigenes CSS und eigene Hooks, versioniert in Git und per Plesk deployt. Bewusst getrennt vom PopularFX-Theme, damit Theme-Updates nichts überschreiben.
- * Version:           0.6.0
+ * Version:           0.7.0
  * Requires at least: 6.5
  * Requires PHP:      8.1
  * Author:            Spiderfrog AG
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const VERSION  = '0.6.0';
+const VERSION  = '0.7.0';
 const CSS_FILE = 'assets/css/site.css';
 const JS_FILE  = 'assets/js/site.js';
 
@@ -33,6 +33,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/kopf-fuss.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/abschnitte.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/wohnungen-ansicht.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/seiten.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/elementor.php';
 
 /**
  * Eigenes Stylesheet im Frontend laden.

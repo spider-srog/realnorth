@@ -73,12 +73,15 @@ require dirname( __DIR__ ) . '/includes/abschnitte.php';
 require dirname( __DIR__ ) . '/includes/kopf-fuss.php';
 require dirname( __DIR__ ) . '/includes/wohnungen-ansicht.php';
 require dirname( __DIR__ ) . '/includes/seiten.php';
+require dirname( __DIR__ ) . '/includes/elementor.php';
 
 use function RealNorth\Abschnitte\band_klasse;
 use function RealNorth\Abschnitte\knopf_klasse;
 use function RealNorth\Abschnitte\raster_klasse;
 use function RealNorth\Abschnitte\zaehlwert;
 use function RealNorth\Ansicht\meta_zu_wohnung;
+use function RealNorth\Elementor\bausteine;
+use function RealNorth\Elementor\url_wert;
 use function RealNorth\Ansicht\pille_klasse;
 use function RealNorth\KopfFuss\ist_aktiv;
 use function RealNorth\KopfFuss\navigation;
@@ -218,6 +221,28 @@ foreach ( $seiten as $name => $daten ) {
 }
 
 pruefe( 'alle Paare geschlossen', true, true );
+
+echo "\n--- Elementor ---\n";
+pruefe( 'URL-Feld von Elementor wird zur Adresse', url_wert( array( 'url' => '/kontakt/', 'is_external' => '' ) ), '/kontakt/' );
+pruefe( 'leeres URL-Feld bleibt leer', url_wert( array( 'url' => '', 'is_external' => '' ) ), '' );
+pruefe( 'fehlender Schlüssel bricht nicht', url_wert( array() ), '' );
+pruefe( 'Zeichenkette geht unverändert durch', url_wert( ' /wohnungen/ ' ), '/wohnungen/' );
+
+// Jedes angemeldete Widget muss es als Klasse geben, sonst taucht es im
+// Builder wortlos nicht auf. Die Datei wird hier von Hand gelesen statt
+// geladen: die Klassen erben von \Elementor\Widget_Base, die es ohne
+// Elementor nicht gibt.
+$quelle = (string) file_get_contents( dirname( __DIR__ ) . '/includes/elementor-bausteine.php' );
+
+foreach ( bausteine() as $klasse ) {
+	if ( ! str_contains( $quelle, 'class ' . $klasse . ' extends Baustein' ) ) {
+		pruefe( "Widget-Klasse {$klasse} existiert", false, true );
+	}
+}
+
+pruefe( 'alle angemeldeten Widgets haben eine Klasse', true, true );
+pruefe( 'dreizehn Widgets', count( bausteine() ), 13 );
+pruefe( 'Namen sind eindeutig', count( array_unique( bausteine() ) ), count( bausteine() ) );
 
 echo "\n--- Jede Seite benutzt die Vorlage ---\n";
 pruefe( 'Vorlagendatei liegt im Plugin', is_readable( dirname( __DIR__ ) . '/' . RealNorth\Vorlage\DATEI ), true );

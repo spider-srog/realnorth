@@ -202,6 +202,14 @@
 
 .rn-wrap--schmal { padding-block: 52px; }
 
+/* Für Elementor: Diese Klassen trägt man im Builder beim Container ins
+   Feld «CSS-Klassen» ein. `rn-band--ruhig`, `--dunkel` und `--weiss`
+   oben setzen den Grund, diese beiden die Höhe des Bandes. Damit sieht
+   ein im Builder gebauter Abschnitt gleich aus wie einer aus dem
+   Seiteninhalt, ohne dass jemand Pixelwerte von Hand abtippt. */
+.rn-luft { padding-block: var(--rn-luft); }
+.rn-luft-klein { padding-block: 52px; }
+
 .rn-raster {
 	display: grid;
 	gap: 36px;

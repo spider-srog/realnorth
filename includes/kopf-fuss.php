@@ -25,6 +25,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Einen Bereich aus dem Theme Builder von Elementor Pro ausgeben.
+ *
+ * Gibt true zurück, wenn dort eine Vorlage zugewiesen ist und ausgegeben
+ * wurde. Dann hält sich das Plugin heraus. Erst wenn nichts kommt —
+ * Elementor Pro fehlt, oder für diesen Bereich ist nichts hinterlegt —
+ * springt die Fassung aus dem Plugin ein. So gibt es keinen Stichtag,
+ * an dem beides gleichzeitig umgestellt sein muss.
+ *
+ * @param string $bereich 'header' oder 'footer'.
+ */
+function elementor_bereich( string $bereich ): bool {
+	if ( ! function_exists( 'elementor_theme_do_location' ) ) {
+		return false;
+	}
+
+	return (bool) elementor_theme_do_location( $bereich );
+}
+
+/**
  * Die Hauptnavigation.
  *
  * Reine Datenstruktur, ohne WordPress-Aufruf — damit testbar. Die

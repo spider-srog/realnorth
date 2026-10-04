@@ -8,18 +8,33 @@ in Betrieb nimmt.
 
 | Was | Wo | Warum dort |
 |---|---|---|
-| Kopf- und Fusszeile | `includes/kopf-fuss.php` | Ohne Elementor Pro gibt es keinen Theme Builder. Im Plugin sind sie in Git und überleben Theme-Updates. |
-| Seitengerüst | `templates/seite-realnorth.php` | Vollständiges Dokument; das Theme ist auf diesen Seiten nicht beteiligt. |
-| Gestaltung | `assets/css/site.css` | Ein Stylesheet, klassenbasiert, alles unter `.rn-site`. |
-| Bausteine | `includes/abschnitte.php` | Die wiederkehrenden Teile des Entwurfs als Shortcodes. |
-| Listen (Wohnungen, Team) | `includes/wohnungen-ansicht.php` | Ohne Pro gibt es kein Loop Grid. |
-| Texte | **Datenbank**, im Seiteninhalt | Dort gehören sie hin: im Editor änderbar, ohne Deploy. |
+| Kopf- und Fusszeile | **Elementor Theme Builder** | Dort ohne Deploy änderbar. Fallback im Plugin: `includes/kopf-fuss.php`. |
+| Formulare | **Elementor Forms** | Versand, Spamschutz und Datenhaltung sind dort gelöst. |
+| Anordnung der Seiten | **Elementor** | Dafür ist ein Builder da. |
+| Seitengerüst | `templates/seite-realnorth.php` | Vollständiges Dokument; ruft die Theme-Builder-Bereiche direkt auf, damit sie unabhängig vom aktiven Theme greifen. |
+| Gestaltung | `assets/css/site.css` | Ein Stylesheet, klassenbasiert. Gleiche Abstände und Farben, egal ob ein Abschnitt im Builder oder im Seiteninhalt entsteht. |
+| Bausteine | `includes/abschnitte.php` | Je Baustein eine Funktion — benutzt vom Shortcode **und** vom Elementor-Widget. |
+| Elementor-Widgets | `includes/elementor-bausteine.php` | Dünne Hüllen um dieselben Funktionen. |
+| Listen (Wohnungen, Team) | `includes/wohnungen-ansicht.php` | Fachlogik, siehe unten. |
+| Texte | **Datenbank** | Im Editor oder im Builder änderbar, ohne Deploy. |
 | Bilder | **Mediathek** | Nicht ins Repo — es wird in den Plugin-Ordner der Live-Seite deployt und ist öffentlich. |
 
-Der Seiteninhalt besteht aus Shortcodes mit Text dazwischen. Das Layout
-steckt nicht mit in der Datenbank: Wer eine Überschrift ändern will,
-macht das im Editor; wer den Abstand über einem Band ändern will, ändert
-eine Zeile CSS in Git. Beides bleibt dort, wo man es nachvollziehen kann.
+Die Trennlinie ist nicht Geschmack, sondern Prüfbarkeit. Was im Builder
+steckt, liegt in der Datenbank: nicht reviewbar, nicht per Rollback
+zurückholbar, nicht testbar. Also gehört Fachlogik ins Plugin und
+Anordnung in den Builder.
+
+Darum bleibt die Wohnungsliste bewusst **kein Loop Grid**: der
+Zimmerfilter «4.5+» heisst «4.5 Zimmer und mehr», sortiert wird «sofort
+zuerst, dann nach Bezugstermin, bei gleichem Termin nach Ort». Das sind
+Regeln mit Testfällen (`tests/wohnungen-logik.php`), keine
+Anzeigeeinstellungen. Im Builder liessen sie sich weder abbilden noch
+prüfen.
+
+Jeder Baustein hat **eine** Umsetzung. Das Widget `realnorth-zahl` und
+der Shortcode `[rn_zahl]` rufen dieselbe Funktion auf, mit denselben
+Feldnamen. Es gibt nichts, was auseinanderlaufen könnte, und die Tests
+decken beide Wege ab.
 
 ## Inbetriebnahme
 
@@ -34,24 +49,53 @@ eine Zeile CSS in Git. Beides bleibt dort, wo man es nachvollziehen kann.
 4. **Seiten aufbauen**: wp-admin -> Seiten -> «realnorth aufbauen».
    Legt die acht Seiten an, weist ihnen die Vorlage zu und setzt die
    Startseite. Wiederholbar — aber er überschreibt eigene Änderungen am
-   Inhalt dieser Seiten.
+   Inhalt dieser Seiten. Danach steht die Seite bereits; alles Weitere
+   ist Verfeinerung.
 5. **Wohnungen füllen**: wp-admin -> Wohnungen -> «Beispieldaten», oder
    von Hand erfassen. Ohne Daten zeigen die Listen den Leerzustand.
 6. **Team füllen**: wp-admin -> Team. Beitragsbild je Person setzen.
-7. **Formulare**: in WPForms anlegen, dann im Seiteninhalt
-   `[rn_formular id="…"]` eintragen. Ohne ID steht ein Hinweis da statt
-   eines toten Formulars.
-8. **Menü**: kommt aus `includes/kopf-fuss.php`, nicht aus wp-admin.
-   Anpassbar über den Filter `realnorth_navigation`.
+7. **Markenfarben in Elementor hinterlegen**: Hamburger-Menü ->
+   Website-Einstellungen -> Globale Farben. Dann greift jedes
+   Elementor-Widget auf dieselbe Palette zu:
+
+   | Rolle | Hex |
+   |---|---|
+   | Marineblau (Kopf, dunkle Bänder) | `#102f45` |
+   | Akzent (Knöpfe, Verweise) | `#153b54` |
+   | Akzent hell (Hover) | `#22526d` |
+   | Text | `#203440` |
+   | Text leise | `#52616a` |
+   | Grund | `#f6f5f1` |
+   | Grund ruhig | `#eaece5` |
+   | Linie | `#d9ddd8` |
+   | Gold (Fokus, Hover auf Dunkel) | `#b39b66` / `#e3d8bf` |
+
+   Globale Schriften: Barlow, Überschriften 500. Die Schrift liegt
+   selbst gehostet im Plugin — in Elementor **nicht** Google Fonts
+   auswählen, sonst lädt sie ein zweites Mal von Google.
+8. **Kopf und Fuss im Theme Builder**: Vorlagen -> Theme Builder ->
+   Kopfzeile bzw. Fusszeile anlegen und auf «Gesamte Website» setzen.
+   Ab diesem Moment zeigt die Seite die Elementor-Fassung; die aus dem
+   Plugin tritt still zurück. Vorlage wieder entfernen = Plugin-Fassung
+   ist zurück.
+9. **Formulare**: in Elementor bauen. Auf einer mit Elementor
+   bearbeiteten Seite direkt das Formular-Widget ziehen. Im klassischen
+   Seiteninhalt stattdessen das Formular als Vorlage speichern
+   (Vorlagen -> Gespeicherte Vorlagen) und deren ID eintragen:
+   `[rn_formular vorlage="123"]`.
 
 ## Zurück, wenn etwas schiefgeht
 
 Drei Stufen, von klein nach gross:
 
+* **Kopf oder Fuss**: Theme-Builder-Vorlage löschen oder ihre Bedingung
+  entfernen. Die Fassung aus dem Plugin übernimmt sofort wieder.
 * **Eine Seite**: im Editor die Vorlage von «realnorth (Vollbreite)»
   zurück auf «Standard» stellen. Die Seite sieht wieder aus wie vorher.
-* **Die Gestaltung**: Plugin deaktivieren. Dann fehlen auch CPTs und
-  Shortcodes — der Seiteninhalt zeigt dann die Shortcode-Namen als Text.
+* **Die Gestaltung**: Plugin deaktivieren. Dann fehlen auch CPTs,
+  Shortcodes und Widgets — Elementor zeigt für die realnorth-Widgets
+  einen Hinweis, der klassische Seiteninhalt die Shortcode-Namen als
+  Text.
 * **Der Stand**: Rollback über Plesk, siehe `docs/plesk-deploy.md`.
 
 ## Die Bausteine
@@ -93,7 +137,7 @@ einfache gesetzt werden: `titel='… <span class="…">…</span>'`.
 | `[rn_knopf]Text[/rn_knopf]` | `url`, `stil` (`laut`/`leise`) |
 | `[rn_bild]` | `platz`, `bildzeile`, `groesse` |
 | `[rn_stelle]` | `titel`, `detail`, `url` |
-| `[rn_formular]` | `id` (WPForms), `titel` |
+| `[rn_formular]` | `vorlage` (Elementor-Vorlage), `id` (WPForms), `titel` |
 
 `[rn_zahl]` zählt beim Scrollen hoch, wenn der Wert mit einer ganzen
 Zahl beginnt. «2.5–5.5» bleibt stehen — eine animierte Spanne ergibt
@@ -124,13 +168,38 @@ echten Shortcode-Parser von WordPress gerendert und im Browser
 angesehen. Das lief ausserhalb des Repos, weil es WordPress-Code
 herunterlädt; es ist kein Teil von `bin/test.sh`.
 
+## Im Builder
+
+Alle Bausteine stehen in Elementor unter der Gruppe **realnorth**:
+
+Bühne · Seitenkopf · Abschnittskopf · Schritt · Kennzahl · Karte ·
+Merkmalsliste · Zeitablauf · Aufruf · Bildplatz · Offene Stelle ·
+Wohnungen · Team
+
+Für die Bänder braucht es kein Widget — das macht der Container von
+Elementor. Damit er aussieht wie im Entwurf, trägt man im Feld
+**CSS-Klassen** eine dieser Klassen ein:
+
+| Klasse | Wirkung |
+|---|---|
+| `rn-band--ruhig` | Grund `#eaece5` |
+| `rn-band--dunkel` | Grund `#102f45`, helle Schrift, Knöpfe drehen auf Weiss |
+| `rn-band--weiss` | Grund Weiss |
+| `rn-luft` | 88 px Abstand oben und unten |
+| `rn-luft-klein` | 52 px Abstand oben und unten |
+
+Für die Spalten eines Rasters nimmt man ebenfalls Elementor-Container.
+`rn-raster--drei` und Geschwister gibt es weiterhin, sie sind aber nur
+für den klassischen Seiteninhalt gedacht.
+
 ## Was noch fehlt
 
 * **Standortkarte und Kontaktkarte** — beide Plätze sind vorbereitet,
   die Bilder gibt es noch nicht.
 * **Bilderkarussells Rennweg** (Companys, Calida, Breitling, 26 Fotos).
   Die Fotos liegen im ZIP, der Baustein dafür ist noch nicht gebaut.
-* **Formulare** — WPForms-IDs eintragen.
+* **Formulare** — in Elementor bauen und einsetzen. WPForms kann
+  danach weg; der Shortcode unterstützt es übergangsweise weiter.
 * **Impressum und Datenschutz** — die Fusszeile verlinkt bereits auf
   `/impressum/` und `/datenschutz/`; die Seiten gibt es noch nicht.
 * **Notfallnummern** auf dem Mieterservice stehen als Platzhalter

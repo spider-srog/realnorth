@@ -371,16 +371,38 @@ function team( $attr ): string {
 add_shortcode( 'rn_team', __NAMESPACE__ . '\team' );
 
 /**
- * [rn_formular id="12" titel="…"]
+ * [rn_formular vorlage="12" titel="…"]
  *
- * Formulare baut WPForms, nicht dieses Plugin: Versand, Spamschutz und
- * Datenhaltung sind dort gelöst und müssten hier neu gebaut werden.
- * Fehlt die ID, steht ein Hinweis da statt eines toten Formulars.
+ * Formulare baut Elementor Pro, nicht dieses Plugin: Versand,
+ * Spamschutz und Datenhaltung sind dort gelöst und müssten hier neu
+ * gebaut werden.
+ *
+ * Auf einer mit Elementor gebauten Seite wird das Formular-Widget
+ * direkt gezogen; dieser Shortcode braucht es dort nicht. Er ist für
+ * den klassischen Seiteninhalt da: Formular als Vorlage speichern
+ * (Vorlagen -> Gespeicherte Vorlagen) und deren ID hier eintragen.
+ *
+ * `id` bleibt für WPForms erhalten, solange dort noch Formulare laufen.
+ * Fehlt beides, steht ein Hinweis da statt eines toten Formulars.
  *
  * @param array<string, string>|string $attr Attribute.
  */
 function formular( $attr ): string {
-	$a = shortcode_atts( array( 'id' => '', 'titel' => '' ), $attr, 'rn_formular' );
+	$a = shortcode_atts(
+		array(
+			'vorlage' => '',
+			'id'      => '',
+			'titel'   => '',
+		),
+		$attr,
+		'rn_formular'
+	);
+
+	$vorlage = (int) $a['vorlage'];
+
+	if ( $vorlage > 0 && shortcode_exists( 'elementor-template' ) ) {
+		return '<div class="rn-formular">' . do_shortcode( '[elementor-template id="' . $vorlage . '"]' ) . '</div>';
+	}
 
 	$id = (int) $a['id'];
 
@@ -392,7 +414,7 @@ function formular( $attr ): string {
 		'<div class="rn-formular"><p><strong>%s</strong></p><p>%s</p></div>',
 		esc_html( '' !== $a['titel'] ? $a['titel'] : __( 'Formular', 'realnorth' ) ),
 		esc_html__(
-			'Hier gehört das WPForms-Formular hin: Formular in WPForms anlegen und dessen ID im Shortcode rn_formular eintragen.',
+			'Hier gehört das Formular hin: in Elementor bauen, als Vorlage speichern und deren ID als vorlage="…" eintragen — oder die Seite mit Elementor bearbeiten und das Formular-Widget direkt setzen.',
 			'realnorth'
 		)
 	);
