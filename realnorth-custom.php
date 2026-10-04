@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       realnorth Custom
- * Plugin URI:        https://github.com/spifroca/realnorth
+ * Plugin URI:        https://github.com/spider-srog/realnorth
  * Description:       Projektspezifische Anpassungen für realnorth.ch — eigenes CSS und eigene Hooks, versioniert in Git und per Plesk deployt. Bewusst getrennt vom PopularFX-Theme, damit Theme-Updates nichts überschreiben.
  * Version:           0.7.0
  * Requires at least: 6.5

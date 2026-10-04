@@ -20,7 +20,7 @@ Theme Builder, Formulare. Dafür gibt es den MCP-Server
 
 | | |
 |---|---|
-| Repo | `spifroca/realnorth` (weitergeleitet auf `spider-srog/realnorth`) |
+| Repo | `spider-srog/realnorth` (früher `spifroca/realnorth`, leitet weiter) |
 | Branch | `claude/new-session-bpjsav` |
 | Stand | `e6ef612`, Plugin-Version 0.7.0, `main` ist vorgespult |
 | Server | Plesk `rlx1.loginserver.ch`, WordPress 7.1, PHP 8.5.9, nginx |

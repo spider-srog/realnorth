@@ -13,7 +13,7 @@ funktioniert (siehe «Warum Plesk zieht»).
 | Stack | WordPress 7.1, PHP 8.5.9, nginx 1.30.4, MariaDB 10.11 |
 | WordPress-Root | `/httpdocs/realnorth/wordpress` (relativ zum Abo-Root) |
 | Shell-Zugriff | **nein** |
-| Repo | `spifroca/realnorth` (derzeit **öffentlich**, siehe Schritt 1) |
+| Repo | `spider-srog/realnorth` (derzeit **öffentlich**, siehe Schritt 1) |
 | Default-Branch | `main` |
 
 Mehr zum Bestand: `ist-zustand.md`.
@@ -59,10 +59,15 @@ Aufbewahren, bis der erste Deploy nachweislich sauber lief.
 
 ### 1. Sichtbarkeit des Repos entscheiden
 
-**Stand heute: `spifroca/realnorth` ist öffentlich.** Das hat zwei Folgen:
+> **Umbenannt.** Das Repo hiess früher `spifroca/realnorth` und heisst
+> heute `spider-srog/realnorth`. GitHub leitet die alte Adresse weiter,
+> deshalb zieht Plesk auch mit dem alten Eintrag weiter. Die Adressen
+> unten sind die neuen; wer den Plesk-Eintrag anfasst, soll sie nehmen.
+
+**Stand heute: `spider-srog/realnorth` ist öffentlich.** Das hat zwei Folgen:
 
 * Bequem: Plesk kann ohne Schlüssel klonen —
-  `https://github.com/spifroca/realnorth.git` genügt, Schritt 2 entfällt.
+  `https://github.com/spider-srog/realnorth.git` genügt, Schritt 2 entfällt.
 * Unbequem: der Code eines Kundenprojekts liegt offen, inklusive
   Commit-Historie. Für ein Kundenprojekt würde ich das Repo **auf privat
   stellen** (GitHub -> Settings -> General -> Danger Zone -> *Change
@@ -73,9 +78,9 @@ Bitte bewusst entscheiden, nicht aus Versehen öffentlich lassen.
 ### 2. Deploy-Key (nur bei privatem Repo)
 
 1. Plesk -> realnorth.ch -> **Git** -> *Remote repository* -> URL
-   `git@github.com:spifroca/realnorth.git` eintragen. Plesk zeigt danach
+   `git@github.com:spider-srog/realnorth.git` eintragen. Plesk zeigt danach
    einen **öffentlichen SSH-Schlüssel** an -> kopieren.
-2. GitHub -> `spifroca/realnorth` -> **Settings** -> **Deploy keys** ->
+2. GitHub -> `spider-srog/realnorth` -> **Settings** -> **Deploy keys** ->
    *Add deploy key*: Titel z. B. `plesk-rlx1`, Key einfügen,
    **«Allow write access» NICHT anhaken** (Plesk muss nur lesen).
 
@@ -89,7 +94,7 @@ Plesk -> realnorth.ch -> **Git** -> *Create repository*:
 | Feld | Wert |
 |---|---|
 | Code location | **Remote repository** |
-| Repository URL | `https://github.com/spifroca/realnorth.git` (privat: `git@github.com:…`) |
+| Repository URL | `https://github.com/spider-srog/realnorth.git` (privat: `git@github.com:…`) |
 | Repository name | `realnorth.git` (nur ein Plesk-interner Name) |
 | Deployment mode | zuerst **Manual**, später *Automatic* |
 | Server path | `/httpdocs/realnorth/wordpress/wp-content/plugins/realnorth-custom` |
