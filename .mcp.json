@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "real-north-ag-elementor": {
+      "type": "http",
+      "url": "https://realnorth.ch/wp-json/elementor/mcp/",
+      "headers": {
+        "Authorization": "${REALNORTH_MCP_AUTH}"
+      }
+    }
+  }
+}

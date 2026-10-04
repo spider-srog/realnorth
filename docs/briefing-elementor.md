@@ -27,15 +27,32 @@ Theme Builder, Formulare. Dafür gibt es den MCP-Server
 | Plugin-Pfad | `/httpdocs/realnorth/wordpress/wp-content/plugins/realnorth-custom/` |
 | Theme | PopularFX (fremd, **nicht anfassen**) |
 | Builder | Elementor **Pro** |
-| MCP-Server | `real-north-ag-elementor` |
+| MCP-Server | `real-north-ag-elementor`, siehe unten |
 
 Deploy: Push auf `claude/**` → GitHub Actions (Lint + Tests) → bei Grün
 und `AUTO_PROMOTE=true` nach `main` → Plesk zieht. Jeder Push kann live
 gehen.
 
-Aus einer Standard-Cloud-Session ist realnorth.ch **nicht** per HTTP
-erreichbar (Egress-Proxy). Der MCP-Server geht trotzdem, weil die
-Verbindung nicht aus dem Container kommt.
+## Damit der MCP-Server überhaupt da ist
+
+Zwei Wege, einer genügt:
+
+1. **Umgebung «realnorth»** (`docs/cloud-environment.md`). Im Repo liegt
+   `.mcp.json` mit der Adresse des Servers; das Anmeldetoken liest es aus
+   der Variablen `REALNORTH_MCP_AUTH`, die in den Einstellungen der
+   Umgebung steht. Nur dort funktioniert es: der Server wird vom Claude
+   Code **im Container** aufgerufen, und der kommt ohne die Freigabe der
+   Umgebung nicht an realnorth.ch heran.
+2. **Benutzerdefinierter Konnektor** unter claude.ai/customize/connectors.
+   Dann baut Anthropic die Verbindung auf, und die Netzsperre des
+   Containers spielt keine Rolle. Ob der Dialog einen festen
+   `Authorization`-Header zulässt oder nur OAuth, ist offen.
+
+In beiden Fällen gilt: Konnektoren und `.mcp.json` werden **beim Start**
+einer Session gelesen. Nachträglich eingetragen heisst: neue Session.
+
+Das Anwendungspasswort gehört weder in den Chat noch ins Repo — das Repo
+ist öffentlich und wird in den Plugin-Ordner der Live-Seite deployt.
 
 ## Auftrag, in dieser Reihenfolge
 

@@ -47,10 +47,52 @@ im Browser; der Code-Weg läuft über GitHub (siehe `plesk-deploy.md`).
     SITE_URL=https://realnorth.ch
     PLESK_PANEL_URL=https://rlx1.loginserver.ch:8443
 
-Keine Secrets hier ablegen — die Werte liest jeder, der die Umgebung benutzt,
-und es gibt (noch) keinen Secrets-Store. Kein `GH_TOKEN`: der GitHub-Proxy
-authentisiert git von aussen, ohne Credential in der VM. Keine
-Plesk-Zugangsdaten und keine DB-Passwörter.
+Kein `GH_TOKEN`: der GitHub-Proxy authentisiert git von aussen, ohne
+Credential in der VM. Keine Plesk-Zugangsdaten und keine DB-Passwörter — die
+braucht hier nichts.
+
+**Korrektur gegenüber der ersten Fassung:** es gibt inzwischen einen Platz für
+Zugangsdaten. In den Einstellungen der Umgebung (Wolken-Menü in der Titelzeile
+der Session -> **Edit**) gibt es einen Abschnitt **API credentials**; fehlt er,
+tut es eine normale Environment variable. Dorthin gehört:
+
+    REALNORTH_MCP_AUTH=Basic <base64 von benutzer:anwendungspasswort>
+
+Den Wert dort eintragen, nicht in den Chat und nicht ins Repo — das Repo ist
+öffentlich und wird in den Plugin-Ordner der Live-Seite deployt. Gelesen wird
+die Variable von `.mcp.json` im Repo-Wurzelverzeichnis (siehe unten). Eine
+neue Session übernimmt sie beim Start.
+
+## MCP-Server der Seite
+
+Im Repo liegt `.mcp.json`:
+
+    {
+      "mcpServers": {
+        "real-north-ag-elementor": {
+          "type": "http",
+          "url": "https://realnorth.ch/wp-json/elementor/mcp/",
+          "headers": { "Authorization": "${REALNORTH_MCP_AUTH}" }
+        }
+      }
+    }
+
+Nur die Adresse steht drin, das Anmeldetoken kommt aus der Variablen oben.
+
+**Das funktioniert nur in der Umgebung «realnorth».** Ein so eingetragener
+Server wird vom Claude Code im Container aufgerufen, nicht von aussen — und
+der Container kommt ohne die Freigabe oben nicht an realnorth.ch heran
+(`403 CONNECT tunnel failed`, gemessen). In einer Standard-Session bleibt der
+Server also stumm, egal was in `.mcp.json` steht.
+
+Der zweite Weg, ohne Umgebung: den Server unter claude.ai/customize/connectors
+als benutzerdefinierten Konnektor anlegen. Dann baut Anthropic die Verbindung
+auf, der Egress-Proxy des Containers spielt keine Rolle. Ob der Dialog dort
+einen festen `Authorization`-Header zulässt oder nur OAuth, ist offen.
+
+`.mcp.json` wird mit deployt und liegt danach im Plugin-Ordner der Live-Seite.
+Das ist unbedenklich: die Datei enthält kein Geheimnis, und die Adresse steht
+ohnehin im öffentlichen Routen-Verzeichnis unter `/wp-json/`.
 
 ## Setup script
 
