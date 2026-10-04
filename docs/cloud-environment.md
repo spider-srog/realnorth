@@ -27,7 +27,22 @@ Allowed domains:
 `rlx1.loginserver.ch` ist neu dazu — das ist der Plesk-Host der Seite
 (gleiche IP 46.4.250.97 wie realnorth.ch).
 
-**Wichtige Einschränkung, gemessen:** Der Egress-Proxy lässt CONNECT
+**Die Netzregel wird beim Sessionstart eingefroren.** Eine laufende Session
+behält die Regel, die beim Start galt — eine nachträglich eingetragene Domain
+wirkt dort nicht. Gemessen an dieser Session: Umgebung «realnorth», Start
+20.08., `realnorth.ch` steht in den Allowed domains, und der Gateway antwortet
+trotzdem mit 403 auf CONNECT, während `github.com` durchgeht. Heisst: nach
+jeder Änderung an Network access eine **neue Session**.
+
+Nachsehen, was gerade gilt:
+
+    curl -sS "$HTTPS_PROXY/__agentproxy/status"
+
+Das Feld `recentRelayFailures` nennt Host und Grund jedes abgewiesenen
+Versuchs — damit lässt sich «Domain fehlt» von «Session ist älter als die
+Freigabe» unterscheiden, statt zu raten.
+
+**Zweite Einschränkung, gemessen:** Der Egress-Proxy lässt CONNECT
 praktisch nur auf Port 443 zu.
 
     https://realnorth.ch              -> 403 CONNECT tunnel failed  (ohne Freigabe)
