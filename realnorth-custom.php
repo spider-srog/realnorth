@@ -34,6 +34,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/abschnitte.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/wohnungen-ansicht.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/seiten.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/elementor.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/anmeldung-pruefen.php';
 
 /**
  * Eigenes Stylesheet im Frontend laden.
