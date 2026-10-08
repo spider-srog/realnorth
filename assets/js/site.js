@@ -256,22 +256,34 @@
 	/**
 	 * Den Titel für den Kopf des Karussells bestimmen.
 	 *
-	 * Bevorzugt `data-rn-titel`. Der Builder lässt eigene Attribute aber
-	 * nicht zu, deshalb der Rückfall: die letzte Überschrift, die im
-	 * Dokument vor dem Container steht. In einem Reiter ist das dessen
-	 * eigene Überschrift, und damit stimmt es von selbst. Findet sich
-	 * keine, bleibt der Kopf leer — Legende und Zähler tragen die
-	 * Information ohnehin.
+	 * Der Builder lässt an einem Container keine eigenen Attribute zu,
+	 * also muss der Titel aus dem Markup kommen. In dieser Reihenfolge:
+	 *
+	 *   1. `data-rn-titel`, wo es von Hand gesetzt wurde.
+	 *   2. Die erste Überschrift *im* Container. Bei einer Karte ist das
+	 *      ihr eigener Name — und nur der ist richtig. Stehen drei
+	 *      Karten nebeneinander, wäre die letzte Überschrift davor die
+	 *      der Nachbarkarte.
+	 *   3. Erst dann die letzte sichtbare Überschrift vor dem Container.
+	 *      Das greift, wenn die Galerie ein Raster unter einem Titel ist.
+	 *
+	 * Findet sich nichts, bleibt der Kopf leer — Legende und Zähler
+	 * tragen die Information ohnehin.
 	 */
 	function titelFinden( container ) {
 		if ( container.getAttribute( 'data-rn-titel' ) ) {
 			return container.getAttribute( 'data-rn-titel' );
 		}
 
-		var ueberschriften = document.querySelectorAll( 'h1, h2, h3, h4' );
+		var innen = container.querySelector( 'h1, h2, h3, h4' );
+
+		if ( innen ) {
+			return innen.textContent.trim();
+		}
+
 		var gefunden = '';
 
-		ueberschriften.forEach( function ( kopf ) {
+		document.querySelectorAll( 'h1, h2, h3, h4' ).forEach( function ( kopf ) {
 			var davor = kopf.compareDocumentPosition( container )
 				& Node.DOCUMENT_POSITION_FOLLOWING;
 
@@ -330,8 +342,14 @@
 		} );
 
 		// Tastaturbedienung: die Bilder sind keine Knöpfe, bekommen aber
-		// Fokus und reagieren auf Enter und Leertaste.
+		// Fokus und reagieren auf Enter und Leertaste. Nur die
+		// sichtbaren — die Bilder im Vorrat füllen bloss das Karussell
+		// und gehören nicht in die Tabulatorreihenfolge.
 		document.querySelectorAll( '.rn-karussell img' ).forEach( function ( bild ) {
+			if ( bild.closest( '.rn-karussell-vorrat' ) ) {
+				return;
+			}
+
 			bild.setAttribute( 'tabindex', '0' );
 			bild.setAttribute( 'role', 'button' );
 

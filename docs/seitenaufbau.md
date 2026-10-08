@@ -188,6 +188,8 @@ Elementor. Damit er aussieht wie im Entwurf, trägt man im Feld
 | `rn-luft` | 88 px Abstand oben und unten |
 | `rn-luft-klein` | 52 px Abstand oben und unten |
 | `rn-karussell` | Macht aus den Bildern im Container eine Galerie: Klick auf ein Bild öffnet es gross, mit Vor und Zurück über alle Bilder desselben Containers |
+| `rn-karussell-vorrat` | Container darin, dessen Bilder nicht erscheinen — sie füllen nur das Karussell |
+| `rn-karussell--raster` | Zeigt die ganze Galerie als Raster statt als Karte mit einem Vorschaubild |
 
 Der Builder hat kein Karussell-Widget, deshalb steckt die Mechanik im
 Plugin (`assets/js/site.js`). Im Builder genügt die Klasse am Container;
@@ -198,9 +200,18 @@ zwei optionale Attribute beschriften den Kopf des Karussells:
 | `data-rn-titel` | Titel über dem Bild, z. B. «Companys» |
 | `data-rn-kicker` | Zeile darüber, z. B. «Rennweg 14/16 · Nutzungsgeschichte» |
 
+`rn-karussell` setzt kein Layout, es markiert nur die Zusammengehörigkeit.
+Üblicher Aufbau: eine Karte trägt die Klasse, zeigt ein Vorschaubild und
+hält die übrigen in einem `rn-karussell-vorrat` daneben.
+
+Den Titel über dem Bild sucht sich das Karussell selber: erst
+`data-rn-titel`, dann die erste Überschrift **im** Container (bei einer
+Karte ihr eigener Name), erst zuletzt die letzte Überschrift davor. Die
+mittlere Stufe ist nötig, weil bei drei Karten nebeneinander sonst die
+Überschrift der Nachbarkarte gewönne.
+
 Die Bildlegende kommt aus dem **Alternativtext** des Bildes — eine
-Quelle für beides. Ohne JavaScript bleibt das Raster ein Raster; es ist
-nichts versteckt.
+Quelle für beides.
 
 Für die Spalten eines Rasters nimmt man ebenfalls Elementor-Container.
 `rn-raster--drei` und Geschwister gibt es weiterhin, sie sind aber nur

@@ -1151,29 +1151,18 @@ textarea.rn-eingabe { min-height: 120px; resize: vertical; }
 	padding-top: 16px;
 }
 
-/* Das Raster, aus dem das Karussell aufgeht. Im Builder wird dafür die
-   Klasse `rn-karussell` am Container eingetragen; jedes Bild darin wird
-   zu einem Auslöser. Ohne JavaScript bleibt es ein Bilderraster — darum
-   ist hier auch nichts versteckt. */
-.rn-karussell {
-	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	gap: var(--rn-abstand-3);
-}
-
+/* `rn-karussell` ist eine Markierung, kein Layout: «die Bilder in
+   diesem Container gehören zusammen». Wie sie angeordnet sind,
+   entscheidet die Seite — als Karte mit einem Vorschaubild oder als
+   Raster. Deshalb steht hier nur, was in beiden Fällen gilt. */
 .rn-karussell img {
-	width: 100%;
-	aspect-ratio: 4 / 3;
-	object-fit: cover;
-	border-radius: var(--rn-radius);
-	background: #e4e7e0;
 	cursor: zoom-in;
 	transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .rn-karussell img:hover {
 	transform: translateY(-3px);
-	box-shadow: 0 10px 26px rgba(25, 51, 42, 0.12);
+	box-shadow: 0 10px 26px rgba(25, 51, 42, 0.14);
 }
 
 .rn-karussell img:focus-visible {
@@ -1181,12 +1170,35 @@ textarea.rn-eingabe { min-height: 120px; resize: vertical; }
 	outline-offset: 4px;
 }
 
+/* Die übrigen Bilder der Galerie. Sie stehen im Markup, erscheinen aber
+   nicht: sie füllen nur das Karussell. Bewusst `display:none` und nicht
+   bloss unsichtbar — so sind sie auch für Screenreader und für die
+   Tabulatorreihenfolge weg, solange das Karussell zu ist. */
+.rn-karussell-vorrat {
+	display: none;
+}
+
+/* Variante: die ganze Galerie als Raster zeigen statt als Karte. */
+.rn-karussell--raster {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--rn-abstand-3);
+}
+
+.rn-karussell--raster img {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	border-radius: var(--rn-radius);
+	background: #e4e7e0;
+}
+
 @media (max-width: 800px) {
-	.rn-karussell { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+	.rn-karussell--raster { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 520px) {
-	.rn-karussell { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--rn-abstand-2); }
+	.rn-karussell--raster { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--rn-abstand-2); }
 }
 
 /* Der Schliessen-Knopf sitzt rechts im Kopf; Vor und Zurück stehen in
@@ -1198,15 +1210,23 @@ textarea.rn-eingabe { min-height: 120px; resize: vertical; }
 	position: fixed;
 	inset: 0;
 	margin: auto;
-	width: min(1120px, calc(100vw - 48px));
+	width: min(1500px, calc(100vw - 32px));
 	max-width: none;
-	max-height: calc(100dvh - 32px);
-	padding: 24px 30px 20px;
+	height: min(1000px, calc(100dvh - 24px));
+	max-height: calc(100dvh - 24px);
+	padding: 20px 26px 16px;
 	border: 1px solid #d5ddd4;
 	border-radius: 8px;
 	background: #f6f7f1;
 	color: var(--rn-text);
 	box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4);
+
+	/* Spalte statt fester Höhen: Kopf, Fuss und Punkte nehmen, was sie
+	   brauchen, das Bild bekommt den Rest. Mit fester Bildhöhe fielen
+	   die Punkte auf niedrigen Bildschirmen unten heraus. */
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 }
 
 .rn-carousel::backdrop { background: rgba(9, 26, 36, 0.91); }
@@ -1238,9 +1258,11 @@ textarea.rn-eingabe { min-height: 120px; resize: vertical; }
 	padding: 12px;
 	border-radius: var(--rn-radius);
 	touch-action: pan-y;
+	flex: 1;
+	min-height: 0;
 }
 
-.rn-carousel-photo { width: 100%; height: min(60dvh, 680px); object-fit: contain; }
+.rn-carousel-photo { width: 100%; height: 100%; min-height: 240px; object-fit: contain; }
 .rn-carousel-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: 14px; padding-top: 16px; }
 .rn-carousel-caption { margin: 0; }
 .rn-carousel-count { white-space: nowrap; color: #617263; font-variant-numeric: tabular-nums; }
@@ -1333,9 +1355,9 @@ textarea.rn-eingabe { min-height: 120px; resize: vertical; }
 	.rn-timeline-list li { padding-top: 0; }
 	.rn-timeline-list li::before { left: -27px; top: 35px; }
 	.rn-timeline-card { padding: 22px; }
-	.rn-carousel { width: calc(100vw - 16px); padding: 18px 12px 12px; max-height: calc(100dvh - 16px); }
+	.rn-carousel { width: calc(100vw - 12px); padding: 16px 10px 10px; height: calc(100dvh - 12px); max-height: calc(100dvh - 12px); }
 	.rn-carousel-stage { grid-template-columns: 32px minmax(0, 1fr) 32px; padding: 5px; gap: 4px; }
-	.rn-carousel-photo { height: 54dvh; }
+	.rn-carousel-head h2 { font-size: 24px; }
 }
 
 @media (max-width: 600px) {
