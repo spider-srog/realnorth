@@ -253,6 +253,36 @@
 		} );
 	}
 
+	/**
+	 * Den Titel für den Kopf des Karussells bestimmen.
+	 *
+	 * Bevorzugt `data-rn-titel`. Der Builder lässt eigene Attribute aber
+	 * nicht zu, deshalb der Rückfall: die letzte Überschrift, die im
+	 * Dokument vor dem Container steht. In einem Reiter ist das dessen
+	 * eigene Überschrift, und damit stimmt es von selbst. Findet sich
+	 * keine, bleibt der Kopf leer — Legende und Zähler tragen die
+	 * Information ohnehin.
+	 */
+	function titelFinden( container ) {
+		if ( container.getAttribute( 'data-rn-titel' ) ) {
+			return container.getAttribute( 'data-rn-titel' );
+		}
+
+		var ueberschriften = document.querySelectorAll( 'h1, h2, h3, h4' );
+		var gefunden = '';
+
+		ueberschriften.forEach( function ( kopf ) {
+			var davor = kopf.compareDocumentPosition( container )
+				& Node.DOCUMENT_POSITION_FOLLOWING;
+
+			if ( davor && kopf.offsetParent !== null ) {
+				gefunden = kopf.textContent.trim();
+			}
+		} );
+
+		return gefunden;
+	}
+
 	function oeffnen( container, bild ) {
 		dialogBauen();
 
@@ -260,7 +290,7 @@
 		stelle = Math.max( 0, bilder.indexOf( bild ) );
 		oeffner = bild;
 
-		var titel = container.getAttribute( 'data-rn-titel' ) || '';
+		var titel = titelFinden( container );
 		var kicker = container.getAttribute( 'data-rn-kicker' ) || '';
 
 		dialog.querySelector( '.rn-carousel-titel' ).textContent = titel;
