@@ -64,16 +64,17 @@ function enqueue_site_styles(): void {
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_site_styles', 20 );
 
 /**
- * Das kleine Skript laden — nur auf Seiten mit unserer Vorlage.
+ * Das kleine Skript laden.
  *
- * Es zählt die Kennzahlen hoch, sonst nichts. Auf allen anderen Seiten
- * hätte es nichts zu tun, also wird es dort auch nicht geladen.
+ * Früher hing es an unserer Seitenvorlage. Das war zu eng: die mit
+ * Elementor gebauten Seiten benutzen die Vorlage des Themes, laden aber
+ * sehr wohl unser Stylesheet — und brauchen das Karussell. Also wird es
+ * im ganzen Frontend geladen.
+ *
+ * Das kostet nichts, wo es nichts zu tun gibt: ohne `[data-rn-zahl]` und
+ * ohne `.rn-karussell` meldet sich das Skript gar nicht erst an.
  */
 function enqueue_site_script(): void {
-	if ( ! Vorlage\ist_aktiv() ) {
-		return;
-	}
-
 	$path = plugin_dir_path( __FILE__ ) . JS_FILE;
 
 	if ( ! is_readable( $path ) ) {

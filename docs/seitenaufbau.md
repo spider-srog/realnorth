@@ -187,6 +187,20 @@ Elementor. Damit er aussieht wie im Entwurf, trägt man im Feld
 | `rn-band--weiss` | Grund Weiss |
 | `rn-luft` | 88 px Abstand oben und unten |
 | `rn-luft-klein` | 52 px Abstand oben und unten |
+| `rn-karussell` | Macht aus den Bildern im Container eine Galerie: Klick auf ein Bild öffnet es gross, mit Vor und Zurück über alle Bilder desselben Containers |
+
+Der Builder hat kein Karussell-Widget, deshalb steckt die Mechanik im
+Plugin (`assets/js/site.js`). Im Builder genügt die Klasse am Container;
+zwei optionale Attribute beschriften den Kopf des Karussells:
+
+| Attribut | Zweck |
+|---|---|
+| `data-rn-titel` | Titel über dem Bild, z. B. «Companys» |
+| `data-rn-kicker` | Zeile darüber, z. B. «Rennweg 14/16 · Nutzungsgeschichte» |
+
+Die Bildlegende kommt aus dem **Alternativtext** des Bildes — eine
+Quelle für beides. Ohne JavaScript bleibt das Raster ein Raster; es ist
+nichts versteckt.
 
 Für die Spalten eines Rasters nimmt man ebenfalls Elementor-Container.
 `rn-raster--drei` und Geschwister gibt es weiterhin, sie sind aber nur

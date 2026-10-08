@@ -1151,6 +1151,49 @@ textarea.rn-eingabe { min-height: 120px; resize: vertical; }
 	padding-top: 16px;
 }
 
+/* Das Raster, aus dem das Karussell aufgeht. Im Builder wird dafür die
+   Klasse `rn-karussell` am Container eingetragen; jedes Bild darin wird
+   zu einem Auslöser. Ohne JavaScript bleibt es ein Bilderraster — darum
+   ist hier auch nichts versteckt. */
+.rn-karussell {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--rn-abstand-3);
+}
+
+.rn-karussell img {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	border-radius: var(--rn-radius);
+	background: #e4e7e0;
+	cursor: zoom-in;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rn-karussell img:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 10px 26px rgba(25, 51, 42, 0.12);
+}
+
+.rn-karussell img:focus-visible {
+	outline: 3px solid var(--rn-gold);
+	outline-offset: 4px;
+}
+
+@media (max-width: 800px) {
+	.rn-karussell { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 520px) {
+	.rn-karussell { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--rn-abstand-2); }
+}
+
+/* Der Schliessen-Knopf sitzt rechts im Kopf; Vor und Zurück stehen in
+   der Bühne und werden von `.rn-carousel button` oben mitgestaltet. */
+.rn-carousel-head > div { min-width: 0; }
+.rn-carousel-titel { margin: 7px 0 0; }
+
 .rn-carousel {
 	position: fixed;
 	inset: 0;
