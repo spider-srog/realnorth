@@ -214,8 +214,10 @@ Fusszeile — sobald du eine Vorlage zuweist, tritt sie still zurück.
 
 * Standortkarte und Kontaktkarte — beide Bildplätze sind vorbereitet,
   die Bilder gibt es noch nicht.
-* Bilderkarussells am Rennweg (Companys, Calida, Breitling, 26 Fotos im
-  ZIP) — Baustein noch nicht gebaut.
+* ~~Bilderkarussells am Rennweg~~ — erledigt: drei Reiter mit je einem
+  Bilderraster, Klick öffnet das Karussell (`rn-karussell`, siehe
+  `docs/seitenaufbau.md`). Alle 26 Fotos stehen auf der Seite, die
+  Alternativtexte sind in der Mediathek gesetzt.
 * Impressum und Datenschutz — die Fusszeile verlinkt bereits darauf.
 * Notfallnummern auf dem Mieterservice stehen als Platzhalter
   (`+41 00 000 00 00`) im Entwurf und damit auch auf der Seite.
