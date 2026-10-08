@@ -192,6 +192,33 @@ Custom deaktivieren**. Das ist der Vorteil gegenüber einem Child-Theme oder
 mu-plugin — der Notausschalter liegt im Backend, ohne Git und ohne File
 Manager. Danach die Ursache im Repo suchen.
 
+## Welcher Stand liegt wirklich auf dem Server?
+
+Plesk zeigt das nicht zuverlässig, und «Deploy» gedrückt zu haben heisst
+nicht, dass neuer Code dort liegt. Die Dateien des Plugins sind über das
+Web erreichbar — damit lässt sich der Stand von aussen datieren, ohne
+Panel und ohne File Manager:
+
+    basis=https://realnorth.ch/wp-content/plugins/realnorth-custom
+
+    # Wie gross ist das Skript dort?
+    curl -s "$basis/assets/js/site.js" | wc -l
+
+    # Ist ein bestimmter Commit angekommen? Nach einem Text suchen, der
+    # erst mit ihm dazukam:
+    curl -s "$basis/docs/seitenaufbau.md" | grep -c rn-karussell
+
+Eine Markdown-Datei aus `docs/` eignet sich dafür besser als eine
+PHP-Datei: sie wird als Text ausgeliefert, nicht ausgeführt.
+
+**Pull und Deploy sind zwei Schritte.** Plesk hält einen eigenen Klon des
+Repos. *Pull updates* holt neue Commits von GitHub in diesen Klon,
+*Deploy* kopiert den Klon ins Zielverzeichnis. Wer nur Deploy drückt,
+kopiert den alten Stand noch einmal — sichtbar passiert nichts, eine
+Fehlermeldung gibt es nicht. Am 08.10. hat genau das zweimal zu
+«deployt, wirkt aber nicht» geführt: der Klon stand seit dem 04.10.
+still.
+
 ## Bekannte Stolpersteine
 
 * **Die beiden Fehler beim Einrichten — und was wirklich geholfen hat.**
